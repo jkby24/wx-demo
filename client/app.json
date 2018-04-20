@@ -1,0 +1,46 @@
+{
+  "tabBar": {
+    "color": "#707070",
+    "selectedColor": "#d81e06",
+    "borderStyle": "white",
+    "list": [
+      {
+        "selectedIconPath": "images/1-s.png",
+        "iconPath": "images/1.png",
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "selectedIconPath": "images/2-s.png",
+        "iconPath": "images/2.png",
+        "pagePath": "pages/shop/shop",
+        "text": "充值"
+      },
+      {
+        "selectedIconPath": "images/3-s.png",
+        "iconPath": "images/3.png",
+        "pagePath": "pages/addCgi/addCgi",
+        "text": "预约"
+      },
+      {
+        "selectedIconPath": "images/4-s.png",
+        "iconPath": "images/4.png",
+        "pagePath": "pages/user/user",
+        "text": "用户"
+      }
+    ]
+  },
+  "pages":[
+    "pages/index/index",
+    "pages/addCgi/addCgi",
+    "pages/shop/shop",
+    "pages/user/user"
+  ],
+  "window":{
+    "backgroundColor":"#F6F6F6",
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarTitleText": "Wafer Quick Start",
+    "navigationBarTextStyle":"black"
+  }
+}
