@@ -10,5 +10,12 @@ page {
     width: 100%;
 }
 .doc-title {
+      position: left;
+}
+
+.zan-card{
+  margin-top: 10px;
+}
+.doc-title {
     position: left;
 }

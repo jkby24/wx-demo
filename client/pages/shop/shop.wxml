@@ -1,62 +1,35 @@
 <!--shop.wxml-->
 <view class="container">
     
-  <view class="doc-title zan-hairline--bottom">CARD</view>
+  <view class="doc-title zan-hairline--bottom">会员方案</view>
   <view class="zan-panel">
-    <view class="zan-card">
+    <view class="zan-card" bindtap="buy" data-item="{{item}}" wx:key="id" wx:for="{{card}}">
       <view class="zan-card__thumb">
         <image class="zan-card__img"
-          src="https://img.yzcdn.cn/upload_files/2016/11/25/FpqPXlrMRjKwJs8VdTu3ZDJCj4j5.jpeg?imageView2/2/w/200/h/200/q/90/format/jpeg"
+          src="./images/{{item.id}}.png"
           mode="aspectFit"
         ></image>
       </view>
       <view class="zan-card__detail">
         <view class="zan-card__detail-row">
-          <view class="zan-card__right-col">¥ 999.99</view>
+          <view class="zan-card__right-col">¥ {{item.price}}</view>
           <view class="zan-card__left-col zan-ellipsis--l2">
-             年卡
+             {{item.title}}
           </view>
         </view>
 
         <view class="zan-card__detail-row zan-c-gray-darker">
-          <view class="zan-card__right-col">x2</view>
+          <view class="zan-card__right-col">点击购买</view>
           <view class="zan-card__left-col">
-            3000克 50%
+            {{item.des}}
           </view>
         </view>
 
         <view class="zan-card__detail-row zan-c-gray-darker">
-          <view class="zan-card__left-col zan-c-red">已发货</view>
+          <view class="zan-card__left-col zan-c-red"></view>
         </view>
       </view>
     </view>
 
-    <view class="zan-card">
-      <view class="zan-card__thumb">
-        <image class="zan-card__img"
-          src="https://img.yzcdn.cn/upload_files/2016/11/25/FpqPXlrMRjKwJs8VdTu3ZDJCj4j5.jpeg?imageView2/2/w/200/h/200/q/90/format/jpeg"
-          mode="aspectFit"
-        ></image>
-      </view>
-      <view class="zan-card__detail">
-        <view class="zan-card__detail-row">
-          <view class="zan-card__right-col">¥ 999.99</view>
-          <view class="zan-card__left-col zan-ellipsis--l2">
-             年卡
-          </view>
-        </view>
-
-        <view class="zan-card__detail-row zan-c-gray-darker">
-          <view class="zan-card__right-col">x2</view>
-          <view class="zan-card__left-col">
-            3000克 50%
-          </view>
-        </view>
-
-        <view class="zan-card__detail-row zan-c-gray-darker">
-          <view class="zan-card__left-col zan-c-red">已发货</view>
-        </view>
-      </view>
-    </view>
   </view>
 </view>
