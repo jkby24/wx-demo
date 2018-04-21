@@ -8,12 +8,14 @@ page {
 
 .zan-panel {
     width: 100%;
+    background-color: #F6F6F6
 }
 .doc-title {
       position: left;
 }
 
 .zan-card{
+  background-color: #ffffff;
   margin-top: 10px;
 }
 .doc-title {

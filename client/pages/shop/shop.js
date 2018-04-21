@@ -10,7 +10,7 @@ Page({
   onLoad: function () {
     var that = this
     qcloud.request({
-      url: `${config.service.host}/weapp/card`,
+      url: `${config.service.host}/weapp/card/list`,
       login: false,
       success(result) {
         that.setData({ card: result.data.data });
@@ -26,30 +26,20 @@ Page({
   // 购买
   buy: function (event) {
     let item = event.currentTarget.dataset.item;
-    util.showSuccess(`购买${item.title}`)
-    // var that = this
-    // qcloud.request({
-    //   url: `${config.service.host}/weapp/hello`,
-    //   login: false,
-    //   success(result) {
-    //     util.showSuccess(result.data.data[0].appid)
-    //   },
-    //   fail(error) {
-    //     util.showModel('请求失败', error);
-    //     console.log('request fail', error);
-    //   }
-    // })
-    // var that = this
-    // qcloud.request({
-    //   url: `${config.service.host}/weapp/card`,
-    //   login: false,
-    //   success(result) {
-    //     util.showSuccess(result.data.data[0].appid)
-    //   },
-    //   fail(error) {
-    //     util.showModel('请求失败', error);
-    //     console.log('request fail', error);
-    //   }
-    // })
+    var that = this
+    qcloud.request({
+      url: `${config.service.host}/weapp/card/buy`,
+      login: true,
+      method:'POST',
+      data: {
+        id: item.id
+      },
+      success(result) {
+        util.showSuccess(`购买订单号${result.result.data}`)
+      },
+      fail(error) {
+        console.log('购买失败', error);
+      }
+    })
   }
 })

@@ -32,5 +32,8 @@ router.get('/message', controllers.message.get)
 // POST 用来处理微信转发过来的客服消息
 router.post('/message', controllers.message.post)
 router.get('/hello', validationMiddleware, controllers.hello)
-router.get('/card', controllers.card)
+
+//会员卡相关
+router.get('/card/list', controllers.card.list)
+router.post('/card/buy', validationMiddleware, controllers.card.buy)
 module.exports = router
