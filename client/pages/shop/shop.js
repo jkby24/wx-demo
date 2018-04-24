@@ -25,6 +25,7 @@ Page({
   },
   // 购买
   buy: function (event) {
+    //todo防止重复点击
     let item = event.currentTarget.dataset.item;
     var that = this
     qcloud.request({
@@ -35,7 +36,8 @@ Page({
         id: item.id
       },
       success(result) {
-        util.showSuccess(`购买订单号${result.result.data}`)
+        let order = result.data.data.data;
+        util.showSuccess(`购买订单号${order.id}`)
       },
       fail(error) {
         console.log('购买失败', error);
