@@ -36,4 +36,6 @@ router.get('/hello', validationMiddleware, controllers.hello)
 //会员卡相关
 router.get('/card/list', controllers.card.list)
 router.post('/card/buy', validationMiddleware, controllers.card.buy)
+router.get('/card/member', validationMiddleware, controllers.card.member)
+router.get('/card/update', controllers.card.update)
 module.exports = router

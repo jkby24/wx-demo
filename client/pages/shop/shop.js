@@ -43,5 +43,20 @@ Page({
         console.log('购买失败', error);
       }
     })
-  }
+  },
+  // 购买
+  isMember: function (event) {
+    var that = this
+    qcloud.request({
+      url: `${config.service.host}/weapp/card/member`,
+      login: true,
+      success(result) {
+        let isMember = result.data.data.isMember;
+        util.showSuccess(`是否会员${isMember}`)
+      },
+      fail(error) {
+        console.log('购买失败', error);
+      }
+    })
+  },
 })
