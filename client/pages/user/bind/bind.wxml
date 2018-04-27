@@ -1,0 +1,29 @@
+<import src="../../../libs/zanui-weapp-dev/dist/field/index.wxml" />
+<import src="../../../libs/zanui-weapp-dev/dist/toast/index.wxml" />
+<!--bind.wxml-->
+<view class="container container-user">
+  <view class="doc-title zan-hairline--bottom">绑定手机</view>
+  <view class="zan-panel">
+    <template
+      is="zan-field"
+      data="{{ ...config.base.tel }}"></template>
+  </view>
+  <view class="zan-panel">
+  <view class="zan-cell zan-field">
+      <view class="zan-cell__hd zan-field__title">验证码</view>
+      <input
+        type="number"
+        placeholder="请输入短信验证码"
+        class="zan-field__input zan-cell__bd" bindinput ="codeInput"/>
+      <view class="zan-cell__ft">
+        <button class="zan-btn zan-btn--mini zan-btn--primary" wx:if="{{btnVisable}}" bindtap="getCode">获取验证码</button>
+        <button class="zan-btn zan-btn--mini zan-btn--disabled zan-btn--primary" wx:if="{{!btnVisable}}" disabled>{{btnTitle}}</button>
+      </view>
+    </view></view>
+    <view class="zan-btns">
+    <button
+      class="zan-btn zan-btn--primary"
+      bindtap="commit">提交</button>
+  </view>
+</view>
+<template is="zan-toast" data="{{ zanToast }}"></template>

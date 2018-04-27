@@ -52,10 +52,7 @@ async function buy(ctx, next) {
       data: order
     }
   } else {
-    ctx.state.data = {
-      status:1,
-      errMsg: '未登录'
-    }
+    ctx.state.code = -1;
   }
 }
 /**
@@ -98,10 +95,7 @@ async function member(ctx, next) {
       orders:orders
     }
   } else {
-    ctx.state.data = {
-      status: 1,
-      errMsg: '未登录'
-    }
+    ctx.state.code = -1;
   }
 }
 /**

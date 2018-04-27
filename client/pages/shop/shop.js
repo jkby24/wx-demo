@@ -40,7 +40,7 @@ Page({
         util.showSuccess(`购买订单号${order.id}`)
       },
       fail(error) {
-        console.log('购买失败', error);
+        console.log('购买失败', error.message);
       }
     })
   },
@@ -51,11 +51,15 @@ Page({
       url: `${config.service.host}/weapp/card/member`,
       login: true,
       success(result) {
-        let isMember = result.data.data.isMember;
-        util.showSuccess(`是否会员${isMember}`)
+        switch(result.data.status){
+          case 0:
+            let isMember = result.data.data.isMember;
+            util.showSuccess(`是否会员${isMember}`)
+        }
       },
       fail(error) {
-        console.log('购买失败', error);
+        console.log('查询失败', error);
+        util.showModel('查询失败', error.message)
       }
     })
   },
