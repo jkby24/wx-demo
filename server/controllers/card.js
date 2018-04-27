@@ -23,9 +23,8 @@ async function buy(ctx, next) {
       }
       return;
     }
-    //生成订单号、记录下并返回
-    let datas = await mysql('card').select('*').where({ status: 0, id: cardId })
-    if (!datas || datas.length ==0) {
+    let data = await mysql('card').select('*').where({ status: 0, id: cardId }).first()
+    if (!data) {
       ctx.state.data = {
         status: 1,
         errMsg: ''
@@ -40,8 +39,8 @@ async function buy(ctx, next) {
       id: id,
       openid: ctx.state.$wxInfo.userinfo.openId,
       cardId: cardId,
-      price: datas[0].price,
-      card_type: datas[0].type,
+      price: data.price,
+      card_type: data.type,
       status:0,
       ts: moment().format("YYYY-MM-DD hh:mm:ss")
     }
@@ -77,17 +76,26 @@ async function member(ctx, next) {
       data = {}
       return;
     }
-    let currentTs = moment();
+    let validOrders = [],
+      currentTs = moment(),
+      isMember = false;
     for(let i=0;i<orders.length;i++ ){
       let order = orders[i];
+      if(!order.endts){
+        continue;
+      }
       //判断卡是否有效
-      let buyTs = order.buyts
-
+      let endts = moment(order.endts);
+      if(currentTs.isBefore(endts)){//还处于生效期
+        validOrders.push(order);
+        isMember = true;
+      }
     }
     //返回
     ctx.state.data = {
       status: 0,
-      data: {}
+      isMember:isMember,
+      orders:orders
     }
   } else {
     ctx.state.data = {
@@ -96,7 +104,61 @@ async function member(ctx, next) {
     }
   }
 }
+/**
+ * 更新卡信息（微信支付平台通知）
+ */
+async function update(ctx, next) {
+  const {id} = ctx.query
+  let order = await mysql("order").where({ id }).first();
+  if(!order){
+    return;
+  }
+  let data = {
+    status:1,
+    buyts:moment().format("YYYY-MM-DD hh:mm:ss")
+  }
+  let orders = await mysql('order').select('*').where({ status: 1, openid: order.openid });
+  let lastEndTs = moment(),currentTs = moment();
+  if(orders && orders.length>0){
+    for(let i=0;i<orders.length;i++ ){
+      let order = orders[i];
+      if(!order.endts){
+        continue;
+      }
+      //判断卡是否有效
+      let endts = moment(order.endts);
+      if(currentTs.isBefore(endts) && lastEndTs.isBefore(endts)){//还处于生效期
+        lastEndTs = endts;
+      }
+    }
+  }
+  let begints = lastEndTs.format("YYYY-MM-DD hh:mm:ss");
+  let endts;
+  switch(order.card_type){
+    case "1"://年卡
+      endts = lastEndTs.add('days',365).format("YYYY-MM-DD hh:mm:ss");
+      break;
+    case "2"://季卡
+      endts = lastEndTs.add('days',90).format("YYYY-MM-DD hh:mm:ss");
+      break;
+    case "3"://月卡
+      endts = lastEndTs.add('days',30).format("YYYY-MM-DD hh:mm:ss");
+      break;
+    default://单次卡
+      endts = lastEndTs.add('days',1).format("YYYY-MM-DD hh:mm:ss");
+      break;
+  }
+  let updateData = {
+    status:1,
+    buyts:moment().format("YYYY-MM-DD hh:mm:ss"),
+    begints:begints,
+    endts:endts
+  }
+  await mysql("order").update(updateData).where({ id })
+}
 module.exports = {
   list,
-  buy
+  buy,
+  member,
+  update
 }
