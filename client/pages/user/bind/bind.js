@@ -1,8 +1,9 @@
 //index.js
-// var qcloud = require('../../vendor/wafer2-client-sdk/index')
+var qcloud = require('../../../vendor/wafer2-client-sdk/index')
 var util = require('../../../utils/util.js')
 const Zan = require('../../../libs/zanui-weapp-dev/dist/index');
 const config = require('./config');
+var globalConfig = require('../../../config')
 var app = getApp()
 Page(Object.assign({}, Zan.Field, Zan.Toast, {
     data: {
@@ -13,14 +14,15 @@ Page(Object.assign({}, Zan.Field, Zan.Toast, {
         btnVisable: true
     },
     onReady: function () {
-        if(app.globalData.codeSecond!=0){
+        if (app.globalData.codeSecond != 0) {
             this.setData({
-                btnVisable:false
+                btnTitle: `已发送(${app.globalData.codeSecond}s)`,
+                btnVisable: false
             })
             this.countdown(this);
-        }else{
+        } else {
             this.setData({
-                btnVisable:true
+                btnVisable: true
             })
         }
     },
@@ -66,42 +68,82 @@ Page(Object.assign({}, Zan.Field, Zan.Toast, {
             this.showZanToast("请输入正确的验证码");
             return;
         }
-        this.showZanToast(this.data.code);
+        var that = this
+        qcloud.request({
+            url: `${globalConfig.service.host}/weapp/bind/bind`,
+            login: true,
+            method: 'POST',
+            data: {
+                mobile: this.data.mobile,
+                code: this.data.code
+            },
+            success(result) {
+                switch (result.data.data.status) {
+                    case 0:
+                        that.showZanToast("绑定成功");
+                        wx.navigateBack();
+                        break;
+                    default:
+                        that.showZanToast(result.data.data.errMsg);
+                }
+            },
+            fail(error) {
+                console.log('绑定失败', error.message);
+                that.showZanToast("绑定失败，请重试");
+            }
+        })
     },
 
     countdown: (that) => {
         var second = app.globalData.codeSecond
         if (second == 0) {
             that.setData({
-                btnVisable:true
+                btnVisable: true
             });
             app.globalData.codeSecond = 0;
             return;
         }
         var time = setTimeout(function () {
             that.setData({
-                btnTitle:`已发送(${second - 1}s)`,
-                btnVisable:false
+                btnTitle: `已发送(${second - 1}s)`,
+                btnVisable: false
             });
             app.globalData.codeSecond = second - 1;
             that.countdown(that);
         }, 1000)
     },
     getCode: function () {
-        // if (!this.data.mobile || !this.isValid(this.data.mobile)) {
-        //     this.showZanToast("请输入正确的手机号！");
-        //     return;
-        // }
-        // this.showZanToast("发送验证码");
-        //发送验证码
-        //60秒倒计时
-        app.globalData.codeSecond = 60;
-        this.setData({
-            btnTitle:`已发送(60s)`,
-            btnVisable:false
-        });
-        this.countdown(this);
-        
+        if (!this.data.mobile || !this.isValid(this.data.mobile)) {
+            this.showZanToast("请输入正确的手机号！");
+            return;
+        }
+        let that = this;
+        qcloud.request({
+            url: `${globalConfig.service.host}/weapp/bind/getCode`,
+            login: true,
+            data: {
+                mobile: this.data.mobile
+            },
+            success(result) {
+                switch (result.data.data.status) {
+                    case 0:
+                        //60秒倒计时
+                        app.globalData.codeSecond = 60;
+                        that.setData({
+                            btnTitle: `已发送(60s)`,
+                            btnVisable: false
+                        });
+                        that.countdown(that);
+                        break;
+                    default:
+                        that.showZanToast(result.data.data.errMsg);
+                }
+            },
+            fail(error) {
+                console.log('验证码发送失败', error.message);
+                that.showZanToast("验证码发送失败，请重试");
+            }
+        })
     },
     codeInput: function (e) {
         this.setData({

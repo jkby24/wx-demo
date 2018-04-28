@@ -1,7 +1,7 @@
 <!--shop.wxml-->
 <view class="container">
     
-  <view class="doc-title zan-hairline--bottom"  bindtap="isMember">会员方案</view>
+  <view class="doc-title zan-hairline--bottom">会员计划</view>
   <view class="zan-panel">
     <view class="zan-card" bindtap="buy" data-item="{{item}}" wx:key="id" wx:for="{{card}}">
       <view class="zan-card__thumb">

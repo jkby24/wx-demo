@@ -5,7 +5,11 @@ var util = require('../../utils/util.js')
 
 Page({
     data: {
-        card: []
+        movies:[    
+            {url:'./images/1.jpg'} ,      
+            {url:'./images/2.jpg'} ,      
+            {url:'./images/3.jpg'}    
+        ]
     },
     onLoad: function () {
         this.login();

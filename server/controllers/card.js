@@ -42,7 +42,7 @@ async function buy(ctx, next) {
       price: data.price,
       card_type: data.type,
       status:0,
-      ts: moment().format("YYYY-MM-DD hh:mm:ss")
+      ts: moment().format("YYYY-MM-DD HH:mm:ss")
     }
     await mysql("order").insert(order);//增加订单
 
@@ -109,7 +109,7 @@ async function update(ctx, next) {
   }
   let data = {
     status:1,
-    buyts:moment().format("YYYY-MM-DD hh:mm:ss")
+    buyts:moment().format("YYYY-MM-DD HH:mm:ss")
   }
   let orders = await mysql('order').select('*').where({ status: 1, openid: order.openid });
   let lastEndTs = moment(),currentTs = moment();
@@ -126,25 +126,25 @@ async function update(ctx, next) {
       }
     }
   }
-  let begints = lastEndTs.format("YYYY-MM-DD hh:mm:ss");
+  let begints = lastEndTs.format("YYYY-MM-DD HH:mm:ss");
   let endts;
   switch(order.card_type){
     case "1"://年卡
-      endts = lastEndTs.add('days',365).format("YYYY-MM-DD hh:mm:ss");
+      endts = lastEndTs.add(365,'d').format("YYYY-MM-DD HH:mm:ss");
       break;
     case "2"://季卡
-      endts = lastEndTs.add('days',90).format("YYYY-MM-DD hh:mm:ss");
+      endts = lastEndTs.add(90,'d').format("YYYY-MM-DD HH:mm:ss");
       break;
     case "3"://月卡
-      endts = lastEndTs.add('days',30).format("YYYY-MM-DD hh:mm:ss");
+      endts = lastEndTs.add(30,'d').format("YYYY-MM-DD HH:mm:ss");
       break;
     default://单次卡
-      endts = lastEndTs.add('days',1).format("YYYY-MM-DD hh:mm:ss");
+      endts = lastEndTs.add(1,'d').format("YYYY-MM-DD HH:mm:ss");
       break;
   }
   let updateData = {
     status:1,
-    buyts:moment().format("YYYY-MM-DD hh:mm:ss"),
+    buyts:moment().format("YYYY-MM-DD HH:mm:ss"),
     begints:begints,
     endts:endts
   }

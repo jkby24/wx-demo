@@ -34,8 +34,14 @@ router.post('/message', controllers.message.post)
 router.get('/hello', validationMiddleware, controllers.hello)
 
 //会员卡相关
-router.get('/card/list', controllers.card.list)
-router.post('/card/buy', validationMiddleware, controllers.card.buy)
-router.get('/card/member', validationMiddleware, controllers.card.member)
+router.get('/card/list', controllers.card.list)//卡列表
+router.post('/card/buy', validationMiddleware, controllers.card.buy)//购卡
+router.get('/card/member', validationMiddleware, controllers.card.member)//查询会员
 router.get('/card/update', controllers.card.update)
+//绑定相关
+router.post('/bind/bind',validationMiddleware, controllers.bind.bind)//绑定手机
+router.get('/bind/getCode',validationMiddleware, controllers.bind.getCode)//发送验证码
+
+
+router.get('/member/member',validationMiddleware, controllers.member.member)//获取user表信息
 module.exports = router
