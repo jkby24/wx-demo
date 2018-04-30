@@ -24,8 +24,12 @@ Page({
         wx.switchTab({
             url: '../shop/shop'
           })
+    }, 
+    order:function() {
+      wx.navigateTo({
+        url: 'order/order'
+      })
     },
-
     // 用户登录示例
     getUserInfo: function () {
         let that = this;

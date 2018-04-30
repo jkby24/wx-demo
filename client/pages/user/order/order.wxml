@@ -1,0 +1,28 @@
+<!--bind.wxml-->
+<view class="container container-user">
+  <view class="zan-panel zan-panel-default">
+    <view class="zan-card" data-item="{{order}}" wx:key="id" wx:for="{{orders}}">
+      <view class="zan-card__thumb">
+        <image class="zan-card__img" src="../../shop/images/{{item.card_type}}.png" mode="aspectFit"></image>
+      </view>
+      <view class="zan-card__detail">
+        <view class="zan-card__detail-row">
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='1'}}">年卡</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='2'}}">季卡</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='3'}}">月卡</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='4'}}">单次卡</view>
+        </view>
+
+        <view class="zan-card__detail-row zan-c-gray-darker">
+          <view class="zan-card__left-col ts-lebel zan-font-10">够买时间：{{item.buyts}}</view>
+          <view class="zan-card__left-col ts-lebel zan-font-10">
+            生效日期：{{item.begints}}
+          </view>
+          <view class="zan-card__left-col ts-lebel zan-font-10">
+            失效日期：{{item.endts}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

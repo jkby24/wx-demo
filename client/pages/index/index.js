@@ -6,9 +6,9 @@ var util = require('../../utils/util.js')
 Page({
     data: {
         movies:[    
-            {url:'./images/1.jpg'} ,      
-            {url:'./images/2.jpg'} ,      
-            {url:'./images/3.jpg'}    
+            {index:0,url:'./images/1.jpg'} ,      
+            {index:1,url:'./images/2.jpg'} ,      
+            {index:2,url:'./images/3.jpg'}    
         ]
     },
     onLoad: function () {

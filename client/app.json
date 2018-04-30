@@ -35,13 +35,14 @@
     "pages/addCgi/addCgi",
     "pages/shop/shop",
     "pages/user/user",
-    "pages/user/bind/bind"
+    "pages/user/bind/bind",
+    "pages/user/order/order"
   ],
   "window":{
     "backgroundColor":"#F6F6F6",
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "Wafer Quick Start",
+    "navigationBarTitleText": "大梦山",
     "navigationBarTextStyle":"black"
   }
 }

@@ -20,8 +20,8 @@
       <button class="zan-btn zan-btn--mini zan-btn--primary zan-btn--plain"  bindtap="buy" wx:if="{{!isMember}}">立即购卡</button>
     </view>
   </view>
-  <view class="zan-panel">
-    <view class="zan-cell zan-cell--access">
+  <view class="zan-panel"  wx:if="{{isMember}}">
+    <view class="zan-cell zan-cell--access" bindtap="order">
       <view class="zan-cell__bd zan-font-14 zan-c-gray-darker">购卡记录</view>
       <view class="zan-cell__ft"></view>
     </view>

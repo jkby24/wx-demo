@@ -38,6 +38,8 @@ router.get('/card/list', controllers.card.list)//卡列表
 router.post('/card/buy', validationMiddleware, controllers.card.buy)//购卡
 router.get('/card/member', validationMiddleware, controllers.card.member)//查询会员
 router.get('/card/update', controllers.card.update)
+router.get('/card/history', validationMiddleware,controllers.card.history)
+
 //绑定相关
 router.post('/bind/bind',validationMiddleware, controllers.bind.bind)//绑定手机
 router.get('/bind/getCode',validationMiddleware, controllers.bind.getCode)//发送验证码

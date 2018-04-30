@@ -59,6 +59,18 @@ async function buy(ctx, next) {
  * 查询购卡信息
  */
 async function history(ctx, next) {
+  if (ctx.state.$wxInfo.loginState === 1) {
+    let openid = ctx.state.$wxInfo.userinfo.openId;
+    //查询订单中已付款的记录
+    let orders = await mysql('order').select('*').where({ status: 1, openid: openid });
+    //返回
+    ctx.state.data = {
+      status: 0,
+      orders: orders
+    }
+  } else {
+    ctx.state.code = -1;
+  }
 }
 /**
  * 查询会员信息
@@ -154,5 +166,6 @@ module.exports = {
   list,
   buy,
   member,
-  update
+  update,
+  history
 }
