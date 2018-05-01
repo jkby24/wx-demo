@@ -3,6 +3,7 @@ const {
 } = require('../qcloud')
 const uuid = require('node-uuid')
 const moment = require('moment');
+const QcloudSms = require("qcloudsms_js");
 /**
  * 绑定
  */
@@ -97,6 +98,7 @@ async function getCode(ctx, next) {
     }
 
     //调用短信机器发送
+    this.sendSms(code, mobile);
 
     //保存验证码
     let id = uuid.v1()
@@ -117,6 +119,31 @@ async function getCode(ctx, next) {
   } else {
     ctx.state.code = -1;
   }
+}
+// 短信应用SDK AppID
+const appid = 1400088921;  // SDK AppID是1400开头
+
+// 短信应用SDK AppKey
+const appkey = "2adccb5dac6e6b43e6639db7081e8979";
+// 短信模板ID，需要在短信应用中申请
+const templateId = 115298;  // NOTE: 这里的模板ID`7839`只是一个示例，真实的模板ID需要在短信控制台中申请
+// 签名
+const smsSign = "腾讯云";  // NOTE: 这里的签名只是示例，请使用真实的已申请的签名, 签名参数使用的是`签名内容`，而不是`签名ID`
+
+// 实例化QcloudSms
+let qcloudsms = QcloudSms(appid, appkey);
+// 设置请求回调处理, 这里只是演示，用户需要自定义相应处理回调
+function callback(err, res, resData) {
+  if (err)
+    console.log("err: ", err);
+  else
+    console.log("response data: ", resData);
+}
+function sendSms(code,phone){
+  var ssender = qcloudsms.SmsSingleSender();
+  var params = [code,3];
+  ssender.sendWithParam(86, phone, templateId,
+    params, SmsSign, "", "", callback);  // 签名参数未提供或者为空时，会使用默认签名发送短信
 }
 module.exports = {
   getCode,

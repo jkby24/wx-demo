@@ -1,6 +1,7 @@
 const { mysql } = require('../qcloud')
 const uuid = require('node-uuid')
 const moment = require('moment');
+const wxpay = require('../tools/pay.js');
 /**
  * 列表
  */
@@ -14,8 +15,8 @@ async function list(ctx, next) {
 async function buy(ctx, next) {
   if (ctx.state.$wxInfo.loginState === 1) {
     //todo 只能够买同类型的进行续费
-    const body = ctx.request.body;
-    let cardId = body.id;
+    const reqBody = ctx.request.body;
+    let cardId = reqBody.id;
     if (!cardId) {
       ctx.state.data = {
         status: 1,
@@ -33,18 +34,31 @@ async function buy(ctx, next) {
     }
     //todo 发送微信后台请求订单
 
+    //微信支付demo  
+
+    var attach = "1276687601";
+    var body = "测试支付";
+    var mch_id = "1111111"; //商户ID
+    var openid = "111111";
+    var bookingNo = "201501806125346"; //订单号
+    var total_fee = 10;
+    var notify_url = "http://localhost/wxpay/notify"; //通知地址        
+    wxpay.order(attach, body, mch_id, openid, bookingNo, total_fee, notify_url).then(function (data) {
+      res.render('wxpay', { args: data });
+    });
+
     //记录订单信息
-    let id = uuid.v1()
-    let order = {
-      id: id,
-      openid: ctx.state.$wxInfo.userinfo.openId,
-      cardId: cardId,
-      price: data.price,
-      card_type: data.type,
-      status:0,
-      ts: moment().format("YYYY-MM-DD HH:mm:ss")
-    }
-    await mysql("order").insert(order);//增加订单
+    // let id = uuid.v1()
+    // let order = {
+    //   id: id,
+    //   openid: ctx.state.$wxInfo.userinfo.openId,
+    //   cardId: cardId,
+    //   price: data.price,
+    //   card_type: data.type,
+    //   status:0,
+    //   ts: moment().format("YYYY-MM-DD HH:mm:ss")
+    // }
+    // await mysql("order").insert(order);//增加订单
 
     //返回
     ctx.state.data = {
