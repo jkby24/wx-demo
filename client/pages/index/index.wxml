@@ -1,10 +1,41 @@
 <!--shop.wxml-->
 <view class="container container-index">
-  <swiper class="swiper" indicator-dots="true" autoplay="true" interval="5000" duration="1000">    
-      <block wx:key="index" wx:for="{{movies}}" wx:for-index="index">    
-        <swiper-item>    
-          <image src="{{item.url}}" class="slide-image" mode="aspectFill"/>    
-        </swiper-item>    
-      </block>    
-    </swiper> 
+  <swiper class="swiper" indicator-dots="true" autoplay="true" interval="5000" duration="1000">
+    <block wx:key="index" wx:for="{{movies}}" wx:for-index="index">
+      <swiper-item>
+        <image src="{{item.url}}" class="slide-image" mode="aspectFill" />
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <view class="zan-panel-title">大梦山</view>
+  <!-- <view class="zan-panel">
+    <view class="zan-font-14 zan-c-gray-darker" style="padding: 15px;line-height:20px">这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介</view>
+  </view> -->
+  <view class="zan-panel">
+    <view class="zan-cell zan-cell--access"  bindtap='call'>
+      <view class="zan-cell__bd">
+        <view>
+          <view class="zan-icon zan-icon-phone"></view>
+          <view class=" zan-font-12 zan-c-gray-darker" style="display:inline-block;padding-left:10px;">{{info.phone}}</view>
+        </view>
+      </view>
+      <view class="zan-cell__ft zan-font-14 zan-c-gray-darker"></view> 
+    </view>
+    <view class="zan-cell zan-cell--access" bindtap='go'>
+      <view class="zan-cell__bd">
+        <view>
+          <view class="zan-icon zan-icon-location"></view>
+          <view class=" zan-font-12 zan-c-gray-darker" style="display:inline-block;padding-left:5px;">鼓楼区梦山路160号梦山新村内(熊猫世界隔壁)</view>
+        </view>
+        
+
+      </view>
+       <view class="zan-cell__ft zan-font-14 zan-c-gray-darker"></view> 
+    </view>
+
+  </view>
+  <view class="zan-panel">
+<map id="map" longitude="{{info.position.longitude}}" latitude="{{info.position.latitude}}" scale="16" bindcontroltap="controltap" markers="{{markers}}" bindmarkertap="markertap" bindregionchange="regionchange" show-location style="width: 100%; height: 500rpx;"></map>
+  </view>
 </view>
