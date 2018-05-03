@@ -5,6 +5,8 @@ const CONF = {
     // 微信小程序 App ID
     appId: 'wx5d62aa9aca8eeedf',
 
+    openIds: ['oH5u84jUYPCfyd4uh7t5pbTG5Ydc'],
+
     // 微信小程序 App Secret
     appSecret: '',
 

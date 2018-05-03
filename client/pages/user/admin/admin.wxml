@@ -1,0 +1,6 @@
+<!--bind.wxml-->
+<view class="container container-user">
+  <view class="zan-panel zan-panel-default">
+    
+  </view>
+</view>

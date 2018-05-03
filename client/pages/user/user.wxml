@@ -26,4 +26,10 @@
       <view class="zan-cell__ft"></view>
     </view>
   </view>
+  <view class="zan-panel"  wx:if="{{isAdmin}}">
+    <view class="zan-cell zan-cell--access" bindtap="goToAdminPage">
+      <view class="zan-cell__bd zan-font-14 zan-c-gray-darker">管理界面</view>
+      <view class="zan-cell__ft"></view>
+    </view>
+  </view>
 </view>

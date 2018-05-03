@@ -6,29 +6,34 @@ var util = require('../../utils/util.js')
 Page({
     data: {
         userInfo: {},
-        member:{},
-        bind:false,
-        isMember:false
+        member: {},
+        bind: false,
+        isMember: false,
+        isAdmin: false,
     },
-    onLoad: function () {
-    },
+    onLoad: function () {},
     onShow: function () {
         this.getUserInfo();
     },
-    bind:function(){
+    bind: function () {
         wx.navigateTo({
             url: 'bind/bind'
-          })
+        })
     },
-    buy:function(){
+    buy: function () {
         wx.switchTab({
             url: '../shop/shop'
-          })
-    }, 
-    order:function() {
-      wx.navigateTo({
-        url: 'order/order'
-      })
+        })
+    },
+    order: function () {
+        wx.navigateTo({
+            url: 'order/order'
+        })
+    },
+    goToAdminPage: function () {
+        wx.navigateTo({
+            url: 'admin/admin'
+        })
     },
     // 用户登录示例
     getUserInfo: function () {
@@ -37,7 +42,7 @@ Page({
             key: 'user',
             success: function (res) {
                 that.setData({
-                    userInfo : res.data.userInfo
+                    userInfo: res.data.userInfo
                 });
                 //获取手机信息
                 qcloud.request({
@@ -47,8 +52,8 @@ Page({
                         switch (result.data.data.status) {
                             case 0:
                                 that.setData({
-                                    member : result.data.data.data,
-                                    bind:true
+                                    member: result.data.data.data,
+                                    bind: true
                                 });
                             default:
                         }
@@ -63,20 +68,38 @@ Page({
                     url: `${config.service.host}/weapp/card/member`,
                     login: true,
                     success(result) {
-                      switch(result.data.data.status){
-                        case 0:
-                            let isMember = result.data.data.isMember;
-                            if(isMember){
-                                that.setData({
-                                    isMember:true
-                                });
-                            }
-                      }
+                        switch (result.data.data.status) {
+                            case 0:
+                                let isMember = result.data.data.isMember;
+                                if (isMember) {
+                                    that.setData({
+                                        isMember: true
+                                    });
+                                }
+                        }
                     },
                     fail(error) {
-                      console.log('查询会员卡信息失败', error.message);
+                        console.log('查询会员卡信息失败', error.message);
                     }
-                  })
+                })
+                //是否管理员
+                qcloud.request({
+                    url: `${config.service.host}/weapp/admin/isAdmin`,
+                    login: true,
+                    success(result) {
+                        switch (result.data.data.status) {
+                            case 0:
+                                let isAdmin = result.data.data.isAdmin;
+                                if (isAdmin) {
+                                    that.setData({
+                                        isAdmin: true
+                                    });
+                                }
+                        }
+                    },
+                    fail(error) {
+                    }
+                })
             }
         })
     },

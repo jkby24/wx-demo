@@ -46,4 +46,8 @@ router.get('/bind/getCode',validationMiddleware, controllers.bind.getCode)//发�
 
 
 router.get('/member/member',validationMiddleware, controllers.member.member)//获取user表信息
+
+router.get('/admin/isAdmin',validationMiddleware, controllers.admin.isAdmin)//是否会员
+router.get('/admin/memberList',validationMiddleware, controllers.admin.memberList)//会员列表
+router.get('/admin/memberDetail',validationMiddleware, controllers.admin.memberDetail)//会员详情
 module.exports = router
