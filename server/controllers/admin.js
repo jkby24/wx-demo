@@ -32,7 +32,7 @@ async function memberList(ctx, next) {
     }
     ctx.state.data = {
       status: 0,
-      data: users
+      members: users
     }
   } else {
     ctx.state.code = -1;
