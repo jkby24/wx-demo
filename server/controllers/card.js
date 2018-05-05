@@ -15,6 +15,7 @@ async function list(ctx, next) {
 async function buy(ctx, next) {
   if (ctx.state.$wxInfo.loginState === 1) {
     //todo 只能够买同类型的进行续费
+    let openid = ctx.state.$wxInfo.userinfo.openId;
     const reqBody = ctx.request.body;
     let cardId = reqBody.id;
     if (!cardId) {
@@ -35,23 +36,26 @@ async function buy(ctx, next) {
     //todo 发送微信后台请求订单
 
     //微信支付demo  
-
-    var attach = "1276687601";
+    let id = uuid.v1();
+    let ts = moment().format("YYYYMMDDHHmmssSSS");
+    let code = "";
+    for (var i = 0; i < 3; i++) {
+      code += Math.floor(Math.random() * 10)
+    }
+    var attach = id;
     var body = "测试支付";
-    var mch_id = "1111111"; //商户ID
-    var openid = "111111";
-    var bookingNo = "201501806125346"; //订单号
-    var total_fee = 10;
-    var notify_url = "http://localhost/wxpay/notify"; //通知地址        
+    var mch_id = "1503154531"; //商户ID
+    var bookingNo = `${ts}${code}`; //订单号
+    var total_fee = data.price;
+    var notify_url = "https://xqthxszo.qcloud.la/weapp/card/notify"; //通知地址        
     wxpay.order(attach, body, mch_id, openid, bookingNo, total_fee, notify_url).then(function (data) {
       res.render('wxpay', { args: data });
     });
 
     //记录订单信息
-    // let id = uuid.v1()
     // let order = {
-    //   id: id,
-    //   openid: ctx.state.$wxInfo.userinfo.openId,
+    //   id: bookingNo,
+    //   openid: openid,
     //   cardId: cardId,
     //   price: data.price,
     //   card_type: data.type,
@@ -127,7 +131,7 @@ async function member(ctx, next) {
 /**
  * 更新卡信息（微信支付平台通知）
  */
-async function update(ctx, next) {
+async function notify(ctx, next) {
   const {id} = ctx.query
   let order = await mysql("order").where({ id }).first();
   if(!order){
@@ -180,6 +184,6 @@ module.exports = {
   list,
   buy,
   member,
-  update,
+  notify,
   history
 }

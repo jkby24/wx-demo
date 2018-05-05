@@ -3,9 +3,9 @@ const CONF = {
     rootPathname: '',
 
     // 微信小程序 App ID
-    appId: 'wx5d62aa9aca8eeedf',
+    appId: 'wxa30d31d1e77b9d5e',
 
-    openIds: ['oH5u84jUYPCfyd4uh7t5pbTG5Ydc'],
+    openIds: ['ocNp_4gokWUwkWL88-ej8Hfp-0x8'],
 
     // 微信小程序 App Secret
     appSecret: '',

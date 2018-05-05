@@ -26,17 +26,17 @@ Page({
   },
   // 购买
   buy: function (event) {
-    wx.requestPayment({
-      'timeStamp': '',
-      'nonceStr': '',
-      'package': '',
-      'signType': 'MD5',
-      'paySign': '',
-      'success': function (res) {
-      },
-      'fail': function (res) {
-      }
-    })
+    // wx.requestPayment({
+    //   'timeStamp': '',
+    //   'nonceStr': '',
+    //   'package': '',
+    //   'signType': 'MD5',
+    //   'paySign': '',
+    //   'success': function (res) {
+    //   },
+    //   'fail': function (res) {
+    //   }
+    // })
     //todo防止重复点击
     let item = event.currentTarget.dataset.item;
     var that = this
@@ -52,6 +52,7 @@ Page({
         util.showSuccess(`购买订单号${order.id}`)
         var payResult = _payResult.data;
         console.log(payResult);
+        debugger;
         wx.requestPayment({
           'timeStamp': payResult.timeStamp.toString(),
           'nonceStr': payResult.nonceStr,
