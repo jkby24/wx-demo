@@ -46,28 +46,28 @@ async function buy(ctx, next) {
     var body = "测试支付";
     var mch_id = "1503154531"; //商户ID
     var bookingNo = `${ts}${code}`; //订单号
-    var total_fee = data.price;
+    var total_fee = 0.01;//data.price;
     var notify_url = "https://xqthxszo.qcloud.la/weapp/card/notify"; //通知地址        
-    wxpay.order(attach, body, mch_id, openid, bookingNo, total_fee, notify_url).then(function (data) {
-      res.render('wxpay', { args: data });
-    });
+    let ip = "";
+    let payInfo = await wxpay.order(attach, body, mch_id, openid, bookingNo, total_fee, notify_url);
 
     //记录订单信息
-    // let order = {
-    //   id: bookingNo,
-    //   openid: openid,
-    //   cardId: cardId,
-    //   price: data.price,
-    //   card_type: data.type,
-    //   status:0,
-    //   ts: moment().format("YYYY-MM-DD HH:mm:ss")
-    // }
+    let order = {
+      id: bookingNo,
+      openid: openid,
+      cardId: cardId,
+      price: data.price,
+      card_type: data.type,
+      status:0,
+      ts: moment().format("YYYY-MM-DD HH:mm:ss")
+    }
     // await mysql("order").insert(order);//增加订单
 
     //返回
     ctx.state.data = {
       status:0,
-      data: order
+      data:order,
+      payInfo: payInfo
     }
   } else {
     ctx.state.code = -1;

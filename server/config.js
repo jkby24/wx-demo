@@ -4,7 +4,7 @@ const CONF = {
 
     // 微信小程序 App ID
     appId: 'wxa30d31d1e77b9d5e',
-
+    payKey: '192006340b4c09247ec02edce69f6a3d', 
     openIds: ['ocNp_4gokWUwkWL88-ej8Hfp-0x8'],
 
     // 微信小程序 App Secret

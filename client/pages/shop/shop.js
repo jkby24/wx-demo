@@ -48,15 +48,13 @@ Page({
         id: item.id
       },
       success(result) {
-        let order = result.data.data.data;
-        util.showSuccess(`购买订单号${order.id}`)
-        var payResult = _payResult.data;
+        let payResult = result.data.data.payInfo;
+        // util.showSuccess(`购买订单号${order.id}`)
         console.log(payResult);
-        debugger;
         wx.requestPayment({
           'timeStamp': payResult.timeStamp.toString(),
           'nonceStr': payResult.nonceStr,
-          'package': payResult.package,
+          'package': `prepay_id=${payResult.package}`,
           'signType': payResult.signType,
           'paySign': payResult.paySign,
           'success': function (succ) {
@@ -66,7 +64,7 @@ Page({
             fail && fail(err);
           },
           'complete': function (comp) {
-
+            debugger
           }
         }) 
       },
