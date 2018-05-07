@@ -132,53 +132,90 @@ async function member(ctx, next) {
  * 更新卡信息（微信支付平台通知）
  */
 async function notify(ctx, next) {
+  
   const {id} = ctx.query
-  let order = await mysql("order").where({ id }).first();
-  if(!order){
-    return;
-  }
-  let data = {
-    status:1,
-    buyts:moment().format("YYYY-MM-DD HH:mm:ss")
-  }
-  let orders = await mysql('order').select('*').where({ status: 1, openid: order.openid });
-  let lastEndTs = moment(),currentTs = moment();
-  if(orders && orders.length>0){
-    for(let i=0;i<orders.length;i++ ){
-      let order = orders[i];
-      if(!order.endts){
-        continue;
-      }
-      //判断卡是否有效
-      let endts = moment(order.endts);
-      if(currentTs.isBefore(endts) && lastEndTs.isBefore(endts)){//还处于生效期
-        lastEndTs = endts;
-      }
+  const reqBody = ctx.request.body;
+  let data = await parsePostData(ctx);
+  `<xml><appid><![CDATA[wxa30d31d1e77b9d5e]]></appid>
+  <attach><![CDATA[bb1aff70-51fb-11e8-8f85-85cf25acbad4]]></attach>
+  <bank_type><![CDATA[CFT]]></bank_type>
+  <cash_fee><![CDATA[1]]></cash_fee>
+  <fee_type><![CDATA[CNY]]></fee_type>
+  <is_subscribe><![CDATA[N]]></is_subscribe>
+  <mch_id><![CDATA[1503154531]]></mch_id>
+  <nonce_str><![CDATA[5a2yk4781b4]]></nonce_str>
+  <openid><![CDATA[ocNp_4gokWUwkWL88-ej8Hfp-0x8]]></openid>
+  <out_trade_no><![CDATA[20180507213705256907]]></out_trade_no>
+  <result_code><![CDATA[SUCCESS]]></result_code>
+  <return_code><![CDATA[SUCCESS]]></return_code>
+  <sign><![CDATA[30580E9BAF679D07FC3C7B9A77CCB472]]></sign>
+  <time_end><![CDATA[20180507213709]]></time_end>
+  <total_fee>1</total_fee>
+  <trade_type><![CDATA[JSAPI]]></trade_type>
+  <transaction_id><![CDATA[4200000115201805074954048116]]></transaction_id>
+  </xml>`
+  // let order = await mysql("order").where({ id }).first();
+  // if(!order){
+  //   return;
+  // }
+  // let data = {
+  //   status:1,
+  //   buyts:moment().format("YYYY-MM-DD HH:mm:ss")
+  // }
+  // let orders = await mysql('order').select('*').where({ status: 1, openid: order.openid });
+  // let lastEndTs = moment(),currentTs = moment();
+  // if(orders && orders.length>0){
+  //   for(let i=0;i<orders.length;i++ ){
+  //     let order = orders[i];
+  //     if(!order.endts){
+  //       continue;
+  //     }
+  //     //判断卡是否有效
+  //     let endts = moment(order.endts);
+  //     if(currentTs.isBefore(endts) && lastEndTs.isBefore(endts)){//还处于生效期
+  //       lastEndTs = endts;
+  //     }
+  //   }
+  // }
+  // let begints = lastEndTs.format("YYYY-MM-DD HH:mm:ss");
+  // let endts;
+  // switch(order.card_type){
+  //   case "1"://年卡
+  //     endts = lastEndTs.add(365,'d').format("YYYY-MM-DD HH:mm:ss");
+  //     break;
+  //   case "2"://季卡
+  //     endts = lastEndTs.add(90,'d').format("YYYY-MM-DD HH:mm:ss");
+  //     break;
+  //   case "3"://月卡
+  //     endts = lastEndTs.add(30,'d').format("YYYY-MM-DD HH:mm:ss");
+  //     break;
+  //   default://单次卡
+  //     endts = lastEndTs.add(1,'d').format("YYYY-MM-DD HH:mm:ss");
+  //     break;
+  // }
+  // let updateData = {
+  //   status:1,
+  //   buyts:moment().format("YYYY-MM-DD HH:mm:ss"),
+  //   begints:begints,
+  //   endts:endts
+  // }
+  // await mysql("order").update(updateData).where({ id })
+}
+function parsePostData( ctx ) {
+  return new Promise((resolve, reject) => {
+    try {
+      let postdata = "";
+      ctx.req.addListener('data', (data) => {
+        postdata += data
+      })
+      ctx.req.addListener("end",function(){
+        // let parseData = parseQueryStr( postdata )
+        resolve( postdata )
+      })
+    } catch ( err ) {
+      reject(err)
     }
-  }
-  let begints = lastEndTs.format("YYYY-MM-DD HH:mm:ss");
-  let endts;
-  switch(order.card_type){
-    case "1"://年卡
-      endts = lastEndTs.add(365,'d').format("YYYY-MM-DD HH:mm:ss");
-      break;
-    case "2"://季卡
-      endts = lastEndTs.add(90,'d').format("YYYY-MM-DD HH:mm:ss");
-      break;
-    case "3"://月卡
-      endts = lastEndTs.add(30,'d').format("YYYY-MM-DD HH:mm:ss");
-      break;
-    default://单次卡
-      endts = lastEndTs.add(1,'d').format("YYYY-MM-DD HH:mm:ss");
-      break;
-  }
-  let updateData = {
-    status:1,
-    buyts:moment().format("YYYY-MM-DD HH:mm:ss"),
-    begints:begints,
-    endts:endts
-  }
-  await mysql("order").update(updateData).where({ id })
+  })
 }
 module.exports = {
   list,
