@@ -136,6 +136,7 @@ async function notify(ctx, next) {
   const {id} = ctx.query
   const reqBody = ctx.request.body;
   let data = await parsePostData(ctx);
+  // "https://xqthxszo.qcloud.la/weapp/card/notify"
   `<xml><appid><![CDATA[wxa30d31d1e77b9d5e]]></appid>
   <attach><![CDATA[bb1aff70-51fb-11e8-8f85-85cf25acbad4]]></attach>
   <bank_type><![CDATA[CFT]]></bank_type>
