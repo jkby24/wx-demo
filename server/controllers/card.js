@@ -135,9 +135,9 @@ async function notify(ctx, next) {
   
   const {id} = ctx.query
   const reqBody = ctx.request.body;
-  let data = await parsePostData(ctx);
+  // let data = await parsePostData(ctx);
   // "https://xqthxszo.qcloud.la/weapp/card/notify"
-  `<xml><appid><![CDATA[wxa30d31d1e77b9d5e]]></appid>
+  let data = `<xml><appid><![CDATA[wxa30d31d1e77b9d5e]]></appid>
   <attach><![CDATA[bb1aff70-51fb-11e8-8f85-85cf25acbad4]]></attach>
   <bank_type><![CDATA[CFT]]></bank_type>
   <cash_fee><![CDATA[1]]></cash_fee>
@@ -155,10 +155,29 @@ async function notify(ctx, next) {
   <trade_type><![CDATA[JSAPI]]></trade_type>
   <transaction_id><![CDATA[4200000115201805074954048116]]></transaction_id>
   </xml>`
-  // let order = await mysql("order").where({ id }).first();
-  // if(!order){
-  //   return;
-  // }
+  let appid = wxpay.getXMLNodeValue('prepay_id', data),
+    attach = wxpay.getXMLNodeValue('attach', data),
+    body = "测试支付",
+    mch_id = wxpay.getXMLNodeValue('mch_id', data),
+    nonce_str = wxpay.getXMLNodeValue('nonce_str', data),
+    notify_url = "https://xqthxszo.qcloud.la/weapp/card/notify",
+    openid = wxpay.getXMLNodeValue('openid', data),
+    out_trade_no = wxpay.getXMLNodeValue('out_trade_no', data),
+    ip = "111.143.57.127",
+    total_fee = wxpay.getXMLNodeValue('total_fee', data),
+    orginSign = wxpay.getXMLNodeValue('sign', data);
+
+    let sign = wxpay.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, out_trade_no, ip, total_fee, 'JSAPI');
+    if (sign != orginSign){
+      return;
+    }
+    let order = await mysql("order").where({ id: out_trade_no}).first();
+    if(!order){
+      return;
+    }
+    if(order.status ==1){
+      return;
+    }
   // let data = {
   //   status:1,
   //   buyts:moment().format("YYYY-MM-DD HH:mm:ss")
