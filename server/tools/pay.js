@@ -53,17 +53,28 @@ var WxPay = {
     return sign.toUpperCase();
   },
 
-  paysignjsapi: function (appid, attach, mch_id, nonce_str, openid, out_trade_no, spbill_create_ip, total_fee, trade_type) {
+  paysignjsapi: function (appid, attach, body, mch_id, nonce_str, notify_url, openid, out_trade_no, spbill_create_ip, total_fee, trade_type) {
     var ret = {
       appid: appid,
       attach: attach,
+      body: body,
       mch_id: mch_id,
       nonce_str: nonce_str,
+      notify_url: notify_url,
       openid: openid,
       out_trade_no: out_trade_no,
+      spbill_create_ip: spbill_create_ip,
       total_fee: total_fee,
       trade_type: trade_type
     };
+    var string = this.raw(ret);
+    string = string + '&key=' + key; //key为在微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->密钥设置  
+    var crypto = require('crypto');
+    var sign = crypto.createHash('md5').update(string, 'utf8').digest('hex');
+    return sign.toUpperCase();
+  },
+
+  resultsignjsapi: function (ret) {
     var string = this.raw(ret);
     string = string + '&key=' + key; //key为在微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->密钥设置  
     var crypto = require('crypto');
@@ -87,20 +98,20 @@ var WxPay = {
     var nonce_str = this.createNonceStr();
     var timeStamp = this.createTimeStamp();
     var ip = config.ip;
-    var url = config.notify_url;
+    var url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     var formData = "<xml>";
     formData += "<appid>" + appid + "</appid>"; //appid  
     formData += "<attach>" + attach + "</attach>"; //附加数据  
     formData += "<body>" + body + "</body>";
     formData += "<mch_id>" + mch_id + "</mch_id>"; //商户号  
     formData += "<nonce_str>" + nonce_str + "</nonce_str>"; //随机字符串，不长于32位。  
-    formData += "<notify_url>" + url + "</notify_url>";
+    formData += "<notify_url>" + config.notify_url + "</notify_url>";
     formData += "<openid>" + openid + "</openid>";
     formData += "<out_trade_no>" + bookingNo + "</out_trade_no>";
     formData += "<spbill_create_ip>"+ip+"</spbill_create_ip>";
     formData += "<total_fee>" + total_fee + "</total_fee>";
     formData += "<trade_type>JSAPI</trade_type>";
-    formData += "<sign>" + this.paysignjsapi(appid, attach, mch_id, nonce_str, openid, bookingNo, total_fee, 'JSAPI') + "</sign>";
+    formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, config.notify_url, openid, bookingNo, ip, total_fee, 'JSAPI') + "</sign>";
     formData += "</xml>";
     var self = this;
     request({
