@@ -7,12 +7,21 @@ var ejs = require('ejs');
 var fs = require('fs');
 var key = config.payKey;
 var messageTpl = fs.readFileSync(__dirname + '/message.ejs', 'utf-8');
-
+var xml2js = require('xml2js');
+var xmlParser = new xml2js.Parser({explicitArray: false, ignoreAttrs: true});
 var WxPay = {
   getXMLNodeValue: function (node_name, xml) {
     var tmp = xml.split("<" + node_name + ">");
     var _tmp = tmp[1].split("</" + node_name + ">");
     return _tmp[0];
+  },
+
+  xmlToJson:function(xml){
+    var deferred = Q.defer();
+    xmlParser.parseString(xml, function (err, result) {
+      deferred.resolve(result);
+    });
+    return deferred.promise;
   },
 
   raw: function (args) {
@@ -44,17 +53,14 @@ var WxPay = {
     return sign.toUpperCase();
   },
 
-  paysignjsapi: function (appid, attach, body, mch_id, nonce_str, notify_url, openid, out_trade_no, spbill_create_ip, total_fee, trade_type) {
+  paysignjsapi: function (appid, attach, mch_id, nonce_str, openid, out_trade_no, spbill_create_ip, total_fee, trade_type) {
     var ret = {
       appid: appid,
       attach: attach,
-      body: body,
       mch_id: mch_id,
       nonce_str: nonce_str,
-      notify_url: notify_url,
       openid: openid,
       out_trade_no: out_trade_no,
-      spbill_create_ip: spbill_create_ip,
       total_fee: total_fee,
       trade_type: trade_type
     };
@@ -75,26 +81,26 @@ var WxPay = {
     return parseInt(new Date().getTime() / 1000) + '';
   }, 
   // 此处的attach不能为空值 否则微信提示签名错误  
-  order: function (attach, body, mch_id, openid, bookingNo, total_fee, notify_url) {
+  order: function (attach, body, mch_id, openid, bookingNo, total_fee) {
     var deferred = Q.defer();
     var appid = config.appId;
     var nonce_str = this.createNonceStr();
     var timeStamp = this.createTimeStamp();
-    var ip = "111.143.57.127";
-    var url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    var ip = config.ip;
+    var url = config.notify_url;
     var formData = "<xml>";
     formData += "<appid>" + appid + "</appid>"; //appid  
     formData += "<attach>" + attach + "</attach>"; //附加数据  
     formData += "<body>" + body + "</body>";
     formData += "<mch_id>" + mch_id + "</mch_id>"; //商户号  
     formData += "<nonce_str>" + nonce_str + "</nonce_str>"; //随机字符串，不长于32位。  
-    formData += "<notify_url>" + notify_url + "</notify_url>";
+    formData += "<notify_url>" + url + "</notify_url>";
     formData += "<openid>" + openid + "</openid>";
     formData += "<out_trade_no>" + bookingNo + "</out_trade_no>";
     formData += "<spbill_create_ip>"+ip+"</spbill_create_ip>";
-    formData += "<total_fee>" + total_fee*100 + "</total_fee>";
+    formData += "<total_fee>" + total_fee + "</total_fee>";
     formData += "<trade_type>JSAPI</trade_type>";
-    formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, bookingNo, ip, total_fee*100, 'JSAPI') + "</sign>";
+    formData += "<sign>" + this.paysignjsapi(appid, attach, mch_id, nonce_str, openid, bookingNo, total_fee, 'JSAPI') + "</sign>";
     formData += "</xml>";
     var self = this;
     request({
