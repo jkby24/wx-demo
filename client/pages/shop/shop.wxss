@@ -21,3 +21,9 @@ page {
 .doc-title {
     position: left;
 }
+.container-shop{
+  padding:0;
+}
+.shop-panel {
+  margin-top: 0px;
+}

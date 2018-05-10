@@ -1,8 +1,11 @@
+
 <!--shop.wxml-->
-<view class="container">
+<import src="../../libs/zanui-weapp-dev/dist/toast/index.wxml" />
+<import src="../../libs/zanui-weapp-dev/dist/dialog/index.wxml" />
+<view class="container container-shop">
     
-  <view class="doc-title zan-hairline--bottom">会员计划</view>
-  <view class="zan-panel">
+  <!-- <view class="doc-title zan-hairline--bottom">会员计划</view> -->
+  <view class="zan-panel shop-panel">
     <view class="zan-card" bindtap="buy" data-item="{{item}}" wx:key="id" wx:for="{{card}}">
       <view class="zan-card__thumb">
         <image class="zan-card__img"
@@ -12,7 +15,7 @@
       </view>
       <view class="zan-card__detail">
         <view class="zan-card__detail-row">
-          <view class="zan-card__right-col">¥ {{item.price}}</view>
+          <view class="zan-card__right-col">¥ {{item.price/100}}</view>
           <view class="zan-card__left-col zan-ellipsis--l2">
              {{item.title}}
           </view>
@@ -33,3 +36,5 @@
 
   </view>
 </view>
+<template is="zan-toast" data="{{ zanToast }}"></template>
+<template is="zan-dialog" data="{{ zanDialog }}"></template>

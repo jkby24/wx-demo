@@ -80,7 +80,10 @@ Page(Object.assign({}, Zan.Field, Zan.Toast, {
             success(result) {
                 switch (result.data.data.status) {
                     case 0:
-                        that.showZanToast("绑定成功");
+                        that.showZanToast({
+                            title: '绑定成功！',
+                            icon: 'success'
+                        });
                         wx.navigateBack();
                         break;
                     default:
@@ -88,8 +91,11 @@ Page(Object.assign({}, Zan.Field, Zan.Toast, {
                 }
             },
             fail(error) {
+                that.showZanToast({
+                    title: '绑定失败，请重试!',
+                    icon: 'fail'
+                });
                 console.log('绑定失败', error.message);
-                that.showZanToast("绑定失败，请重试");
             }
         })
     },

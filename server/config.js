@@ -7,6 +7,7 @@ const CONF = {
     payKey: '192006340b4c09247ec02edce69f6a3d', 
     openIds: ['ocNp_4gokWUwkWL88-ej8Hfp-0x8'],
     notify_url:"https://xqthxszo.qcloud.la/weapp/card/notify",
+    mch_id:"1503154531",
     ip:"111.143.57.127",
 
     // 微信小程序 App Secret
