@@ -5,7 +5,7 @@
 <view class="container container-shop">
     
   <!-- <view class="doc-title zan-hairline--bottom">会员计划</view> -->
-  <view class="zan-panel shop-panel">
+  <view class="zan-panel shop-panel" wx:if="{{page == 0}}">
     <view class="zan-card" bindtap="buy" data-item="{{item}}" wx:key="id" wx:for="{{card}}">
       <view class="zan-card__thumb">
         <image class="zan-card__img"
@@ -34,6 +34,21 @@
       </view>
     </view>
 
+  </view>
+
+  <view class="zan-panel shop-panel" wx:if="{{page == 1}}">
+    <view class="doc-title zan-hairline--bottom">购买须知</view>
+
+  <view class="zan-panel-title">年卡使用说明</view>
+    <view class="zan-panel">
+       <textarea disabled value="{{content}}" class="ta zan-font-14 zan-c-gray-darker"/>
+    </view>
+    <view class="zan-panel">
+      <view class="zan-btns">
+        <button class="zan-btn" bindtap="buyCancel">取消订单</button>
+        <button class="zan-btn zan-btn--primary" bindtap="doBuy">确认付款</button>
+      </view>
+    </view>
   </view>
 </view>
 <template is="zan-toast" data="{{ zanToast }}"></template>

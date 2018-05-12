@@ -4,6 +4,8 @@ const {
 const uuid = require('node-uuid')
 const moment = require('moment');
 const QcloudSms = require("qcloudsms_js");
+const config = require('../config');
+var Q = require("q");
 /**
  * 绑定
  */
@@ -98,8 +100,14 @@ async function getCode(ctx, next) {
     }
 
     //调用短信机器发送
-    this.sendSms(code, mobile);
-
+    let isSuccess = await sendSms(code, mobile);
+    if(!isSuccess){
+      ctx.state.data = {
+        status: 1,
+        errMsg: '短信发送失败，请重试'
+      }
+      return;
+    }
     //保存验证码
     let id = uuid.v1()
     let order = {
@@ -121,29 +129,35 @@ async function getCode(ctx, next) {
   }
 }
 // 短信应用SDK AppID
-const appid = 1400088921;  // SDK AppID是1400开头
+const appid = config.sms_appid;  // SDK AppID是1400开头
 
 // 短信应用SDK AppKey
-const appkey = "2adccb5dac6e6b43e6639db7081e8979";
+const appkey = config.sms_appkey;
 // 短信模板ID，需要在短信应用中申请
-const templateId = 115298;  // NOTE: 这里的模板ID`7839`只是一个示例，真实的模板ID需要在短信控制台中申请
+const templateId = config.sms_tmpid;  // NOTE: 这里的模板ID`7839`只是一个示例，真实的模板ID需要在短信控制台中申请
 // 签名
-const smsSign = "腾讯云";  // NOTE: 这里的签名只是示例，请使用真实的已申请的签名, 签名参数使用的是`签名内容`，而不是`签名ID`
+const smsSign = config.sms_sign;  // NOTE: 这里的签名只是示例，请使用真实的已申请的签名, 签名参数使用的是`签名内容`，而不是`签名ID`
 
 // 实例化QcloudSms
 let qcloudsms = QcloudSms(appid, appkey);
-// 设置请求回调处理, 这里只是演示，用户需要自定义相应处理回调
-function callback(err, res, resData) {
-  if (err)
-    console.log("err: ", err);
-  else
-    console.log("response data: ", resData);
-}
 function sendSms(code,phone){
   var ssender = qcloudsms.SmsSingleSender();
   var params = [code,3];
+  var deferred = Q.defer();
+    
   ssender.sendWithParam(86, phone, templateId,
-    params, SmsSign, "", "", callback);  // 签名参数未提供或者为空时，会使用默认签名发送短信
+    params, smsSign, "", "", (err, res, resData) =>{
+      if (err){
+        deferred.resolve(false);
+        console.log("sendWithParam err: ", err);
+      }
+      else{
+        deferred.resolve(true);
+        console.log("sendWithParam response data: ", resData);
+      }
+        
+    });  // 签名参数未提供或者为空时，会使用默认签名发送短信
+  return deferred.promise;
 }
 module.exports = {
   getCode,

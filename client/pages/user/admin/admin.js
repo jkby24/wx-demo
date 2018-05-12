@@ -6,6 +6,7 @@ const { Tab, extend } = require('../../../libs/zanui-weapp-dev/dist/index');
 Page(extend({}, Tab, {
   data: {
     members:[],
+    searchValue: '',  
     tab: {
       list: [{
         id: '0',
@@ -28,14 +29,28 @@ Page(extend({}, Tab, {
   onLoad: function () {
     this.getMembers();
   },
+  bindKeyInput: function(e) {
+    this.setData({
+      searchValue: e.detail.value
+    })
+  },
+  serach:function(){
+    if(!this.data.searchValue || this.data.searchValue==""){
+      return 
+    }
+    this.getMembers(this.data.searchValue);
+  },
 
   // 获取会员列表
-  getMembers: function () {
+  getMembers: function (key) {
     let that = this;
     //获取会员信息
     qcloud.request({
       url: `${config.service.host}/weapp/admin/memberList`,
       login: true,
+      data:{
+        key:key?key:''
+      },
       success(result) {
         switch (result.data.data.status) {
           case 0:

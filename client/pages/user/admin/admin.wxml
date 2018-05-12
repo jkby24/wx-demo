@@ -8,22 +8,36 @@
       data="{{ ...tab, componentId: 'tab' }}"></template>
   </view>
   <view class="container container-user" wx:if="{{tab.selectedId == tab.list[0].id}}">
-    <view class="table">
+    <view class='page_row'>  
+      <view class="search">  
+        <view class="df search_arr">  
+          <icon class="searchcion" size='20' type='search'></icon>  
+          <input class="zan-font-12" type="number" maxlength="11" placeholder="请输入手机号" value="{{searchValue}}" bindinput="bindKeyInput"/>  
+        </view>  
+      </view>  
+      <view class='sousuo zan-btn zan-btn--small zan-btn--primary' bindtap="serach">搜索</view>  
+    </view>  
+
+    <view class="table  zan-font-12">
     <view class="tr bg-w">
-      <view class="th">序号{{tab.selectedId}}</view>
-      <view class="th">手机号</view>
-      <view class="th ">操作</view>
+      <view class="th" width="10">序号</view>
+      <view class="th" width="50">手机号</view>
+      <view class="th" width="50">操作</view>
     </view>
       <block wx:for="{{members}}" data-item="{{member}}" wx:key="{{openid}}">
         <view class="tr bg-g" wx:if="{{index % 2 == 0}}">
           <view class="td">{{index}}</view>
           <view class="td">{{item.mobile}}</view>
-          <view class="td">{{item.mobile}}</view>
+          <view class="td">
+          <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">查看详情</button>
+          </view>
         </view>
-        <view class="tr" wx:else>
+        <view class="tr  bg-g" wx:else>
           <view class="td">{{index}}</view>
           <view class="td">{{item.mobile}}</view>
-          <view class="td">{{item.mobile}}</view>
+          <view class="td">
+          <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">查看详情</button>
+          </view>
         </view>
       </block>
     </view>

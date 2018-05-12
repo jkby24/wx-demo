@@ -9,14 +9,16 @@ Page({
           phone:"0591-23433299",
           position:{
             title:"大梦山游泳馆",
-            latitude: 26.087590,
-            longitude: 119.283940,
+            latitude: 26.088291,
+            longitude: 119.283867,
           }
         },
         movies:[    
             {index:0,url:'./images/1.jpg'} ,      
             {index:1,url:'./images/2.jpg'} ,      
-            {index:2,url:'./images/3.jpg'}    
+            {index:2,url:'./images/3.jpg'} ,  
+            {index:3,url:'./images/4.jpg'} ,  
+            {index:4,url:'./images/5.jpg'} ,  
         ],
         markers: [{
           // iconPath: "/resources/others.png",
@@ -27,8 +29,8 @@ Page({
           //   color:"red"
           // },
           id: 0,
-          latitude: 26.087590,
-          longitude: 119.283940,
+          latitude: 26.088291,
+          longitude: 119.283867,
         }]
     },
     onLoad: function () {

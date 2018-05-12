@@ -9,6 +9,13 @@ const CONF = {
     notify_url:"https://xqthxszo.qcloud.la/weapp/card/notify",
     mch_id:"1503154531",
     ip:"111.143.57.127",
+    // 短信应用SDK AppID
+    sms_appid : 1400090938,  // SDK AppID是1400开头
+
+    // 短信应用SDK AppKey
+    sms_appkey : "dcd1e9e94224a8b851ba6e60c446231f",
+    sms_tmpid : "120567",
+    sms_sign : "福州云动大梦山体育文化",
 
     // 微信小程序 App Secret
     appSecret: '',

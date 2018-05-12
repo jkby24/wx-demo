@@ -23,7 +23,15 @@ async function isAdmin(ctx, next) {
  */
 async function memberList(ctx, next) {
   if (ctx.state.$wxInfo.loginState === 1 && isAdminJudge(ctx.state.$wxInfo.userinfo.openId)) {
-    let users = await mysql('user').select('*');
+    const {
+      key
+    } = ctx.query;
+    let users;
+    if(key){
+      users = await mysql('user').select('*').where('mobile', 'like', `%${key}%`);
+    }else{
+      users = await mysql('user').select('*');
+    }
     if(!users){
       ctx.state.data = {
         status: 1

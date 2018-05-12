@@ -27,3 +27,13 @@ page {
 .shop-panel {
   margin-top: 0px;
 }
+.panel-bottom{
+  position: fixed;bottom: 0;width: 100%;
+}
+.panel-top{
+  position: fixed;top: 0;width: 100%;
+}
+.ta{
+  width: 100%;
+  min-height: 300px;
+}
