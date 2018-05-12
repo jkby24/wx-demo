@@ -42,7 +42,7 @@ async function buy(ctx, next) {
       return;
     }
 
-    //微信支付demo  
+    // //微信支付demo  
     let id = uuid.v1();
     let ts = moment().format("YYYYMMDDHHmmssSSS");
     let code = "";
@@ -57,6 +57,12 @@ async function buy(ctx, next) {
     let ip = "";
     let payInfo = await wxpay.order(attach, body, mch_id, openid, bookingNo, total_fee);
 
+    await mysql('order')
+    .where({
+      openid: openid,
+      status: 0
+    })
+    .del()
     //记录订单信息
     let order = {
       id: bookingNo,

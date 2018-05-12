@@ -10,10 +10,10 @@ Page(extend({}, Tab, {
     tab: {
       list: [{
         id: '0',
-        title: '会员列表'
+        title: '会员管理'
       },{
         id: '1',
-        title: '会员列表2'
+        title: '预约列表'
       }],
       selectedId: '0'
     }
