@@ -46,7 +46,7 @@
     <view class="zan-panel">
       <view class="zan-btns">
         <button class="zan-btn" bindtap="buyCancel">取消订单</button>
-        <button class="zan-btn zan-btn--primary" bindtap="doBuy">确认够买</button>
+        <button class="zan-btn zan-btn--primary" bindtap="doBuy">确认购买</button>
       </view>
     </view>
   </view>
