@@ -2,48 +2,59 @@
 var qcloud = require('../../vendor/wafer2-client-sdk/index')
 var config = require('../../config')
 var util = require('../../utils/util.js')
+// pages/index.js
+const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
 
 Page({
-    data: {
-        requestResult: '',
-        canIUseClipboard: wx.canIUse('setClipboardData')
-    },
 
-    testCgi: function () {
-        util.showBusy('请求中...')
-        var that = this
-        qcloud.request({
-            url: `${config.service.host}/weapp/demo`,
-            login: false,
-            success (result) {
-                util.showSuccess('请求成功完成')
-                that.setData({
-                    requestResult: JSON.stringify(result.data)
-                })
-            },
-            fail (error) {
-                util.showModel('请求失败', error);
-                console.log('request fail', error);
-            }
-        })
-    },
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    year: new Date().getFullYear(),      // 年份
+    month: new Date().getMonth() + 1,    // 月份
+    day: new Date().getDate(),
+    str: MONTHS[new Date().getMonth()],  // 月份字符串
 
-    copyCode: function (e) {
-        var codeId = e.target.dataset.codeId
-        wx.setClipboardData({
-            data: code[codeId - 1],
-            success: function () {
-                util.showSuccess('复制成功')
-            }
-        })
+    demo5_days_style: [],
+  },
+  dayClick: function (event) {
+    console.log(event.detail);
+    this.data.demo5_days_style.push({ month: 'current', day: event.detail.day, color: 'white', background: '#84e7d0' });
+
+    this.setData({
+      demo5_days_style: this.data.demo5_days_style
+    });
+  },
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    const days_count = new Date(this.data.year, this.data.month, 0).getDate();
+    
+
+    let demo5_days_style = new Array;
+    for (let i = 1; i <= days_count; i++) {
+      const date = new Date(this.data.year, this.data.month - 1, i);
+      if (date.getDay() == 0) {
+        demo5_days_style.push({
+          month: 'current', day: i, color: '#f488cd'
+        });
+      } else {
+        demo5_days_style.push({
+          month: 'current', day: i, color: '#a18ada'
+        });
+      }
     }
+    demo5_days_style.push({ month: 'current', day: 12, color: 'white', background: '#b49eeb' });
+    demo5_days_style.push({ month: 'current', day: 17, color: 'white', background: '#f5a8f0' });
+    demo5_days_style.push({ month: 'current', day: 20, color: 'white', background: '#aad4f5' });
+    demo5_days_style.push({ month: 'current', day: 25, color: 'white', background: '#84e7d0' });
+
+    this.setData({
+      demo5_days_style
+    });
+
+    
+  },
 })
-
-var code = [
-`router.get('/demo', controllers.demo)`,
-`module.exports = ctx => {
-    ctx.state.data = {
-        msg: 'Hello World'
-    }
-}`
-]

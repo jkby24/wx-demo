@@ -1,5 +1,21 @@
 <!--index.wxml-->
 <view class="container">
    <view class="doc-title zan-hairline--bottom">暂未开放，敬请期待...</view>
-
+  <!--index.wxml
+<view class="container-fluid">
+    
+    <view class="demo5">
+        <calendar        
+        cell-size="30" 
+        next="{{true}}" prev="{{true}}" show-more-days="{{true}}"
+        weeks-type="cn"
+        calendar-style="demo5-calendar" 
+        header-style="demo5-header" 
+        board-style="demo5-board" 
+        days-color="{{demo5_days_style}}"
+         binddayClick="dayClick" 
+        />
+    </view>
+    
+</view>-->
 </view>
