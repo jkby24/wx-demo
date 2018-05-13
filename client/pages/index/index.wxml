@@ -7,7 +7,6 @@
       </swiper-item>
     </block>
   </swiper>
-
   <view class="zan-panel-title">大梦山</view>
   <!-- <view class="zan-panel">
     <view class="zan-font-14 zan-c-gray-darker" style="padding: 15px;line-height:20px">这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介这是简介</view>

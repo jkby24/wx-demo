@@ -10,10 +10,11 @@ Page({
         bind: false,
         isMember: false,
         isAdmin: false,
+        logged:false
     },
     onLoad: function () {},
     onShow: function () {
-        this.getUserInfo();
+      this.getUserInfo();  
     },
     bind: function () {
         wx.navigateTo({
@@ -42,7 +43,8 @@ Page({
             key: 'user',
             success: function (res) {
                 that.setData({
-                    userInfo: res.data.userInfo
+                    userInfo: res.data.userInfo,
+                    logged:true
                 });
                 //获取手机信息
                 qcloud.request({
@@ -100,9 +102,21 @@ Page({
                     fail(error) {
                     }
                 })
+            },
+            fail:function(res){
             }
         })
     },
+    
 
+    // 用户登录
+    login: function () {
+      var that = this;
+      util.login((success) => {
+        if (success) {
+          that.getUserInfo();
+        }
+      })
+    }
 
 })

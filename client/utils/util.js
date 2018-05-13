@@ -1,3 +1,4 @@
+var qcloud = require('../vendor/wafer2-client-sdk/index')
 const formatTime = date => {
     const year = date.getFullYear()
     const month = date.getMonth() + 1
@@ -39,10 +40,61 @@ var showModel = (title, content) => {
     })
 }
 
+var login = (cb)=>{
+  showBusy('正在登录')
+  var that = this
+  let setUserInfo=  (data)=> {
+    wx.setStorage({
+      key: "user",
+      data: data
+    })
+  };
+  // 调用登录接口
+  qcloud.login({
+    success(result) {
+      if (result) {
+        showSuccess('登录成功')
+        setUserInfo({
+          userInfo: result,
+          logged: true
+        })
+        cb(true);
+      } else {
+        // 如果不是首次登录，不会返回用户信息，请求用户信息接口获取
+        qcloud.request({
+          url: config.service.requestUrl,
+          login: true,
+          success(result) {
+            showSuccess('登录成功')
+            setUserInfo({
+              userInfo: result.data.data,
+              logged: true
+            })
+            cb(true);
+          },
+
+          fail(error) {
+            cb(false);
+            showModel('请求失败', error)
+            console.log('request fail', error)
+          }
+        })
+      }
+    },
+
+    fail(error) {
+      cb(false);
+      showModel('登录失败', error)
+      console.log('登录失败', error)
+    }
+  });
+}
+
 
 module.exports = {
     formatTime,
     showBusy,
     showSuccess,
-    showModel
+    showModel,
+    login
 }
