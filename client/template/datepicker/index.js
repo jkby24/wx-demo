@@ -433,3 +433,10 @@ export const open = (value) => {
   const self = _getCurrentPage();
   conf.showDatepicker.call(self, value);
 };
+/**
+ * 关闭日历
+ */
+export const close = () => {
+  const self = _getCurrentPage();
+  conf.closeDatePicker.call(self);
+};

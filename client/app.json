@@ -45,11 +45,5 @@
     "navigationBarBackgroundColor": "#F6F6F6",
     "navigationBarTitleText": "大梦山",
     "navigationBarTextStyle":"black"
-  },
-  "plugins": {
-    "calendar": {
-      "version": "1.1.0",
-      "provider": "wx92c68dae5a8bb046"
-    }
   }
 }

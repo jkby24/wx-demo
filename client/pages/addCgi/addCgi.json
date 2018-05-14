@@ -1,7 +1,6 @@
 {
     "navigationBarTitleText": "预约",
-    
-      "usingComponents": {
-        "calendar": "plugin://calendar/calendar"
-      }
+    "usingComponents": {
+      "zan-select": "../../libs/zanui-weapp-dev/dist/select/index"
+    }
 }

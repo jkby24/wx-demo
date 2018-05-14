@@ -6,11 +6,11 @@ var util = require('../../utils/util.js')
 Page({
     data: {
         info:{
-          phone:"0591-23433299",
+          phone:"0591-83775953",
           position:{
             title:"大梦山游泳馆",
-            latitude: 26.088291,
-            longitude: 119.283867,
+            latitude: 26.088123,
+            longitude: 119.283886,
           }
         },
         movies:[    
@@ -21,16 +21,18 @@ Page({
             {index:4,url:'./images/5.jpg'} ,  
         ],
         markers: [{
-          // iconPath: "/resources/others.png",
+          // iconPath: "./map.jpeg",
+          // width:30,
+          // height:30,
           // label:{
           //   content: "大梦山"
           // },
-          // callout:{
-          //   color:"red"
-          // },
+          callout:{
+            color:"red"
+          },
           id: 0,
-          latitude: 26.088291,
-          longitude: 119.283867,
+          latitude: 26.088123,
+          longitude: 119.283886,
         }]
     },
     onLoad: function () {

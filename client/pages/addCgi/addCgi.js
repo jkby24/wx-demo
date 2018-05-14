@@ -59,20 +59,43 @@ var util = require('../../utils/util.js')
 //   },
 // })
 
-import initDatepicker, { open,getSelectedDay, jumpToToday } from '../../template/datepicker/index';
+import initDatepicker, { close,open,getSelectedDay, jumpToToday } from '../../template/datepicker/index';
+const Zan = require('../../libs/zanui-weapp-dev/dist/index');
 const conf = {
   data:{
-    datepicker:{
-      selectedValue:'12'
-    }
+    selectedDate:'',
+    items: [
+      {
+        value: '1',
+        // 选项文案
+        name: '选项一',
+      },
+      {
+        value: '2',
+        name: '选项二',
+      },
+    ],
+    checkedValue: '选项一',
+    activeColor: '#ff4443'
+  }, 
+  handleSelectChange({ detail }) {
+    console.log(detail);
   },
-  test:function(){
-    open('2019-08-08');
+  openDatePicker:function(){
+    open(this.data.selectedDate);
   },
   onShow: function () {
+    let that = this;
+    const date = new Date();
+    const curYear = date.getFullYear();
+    const curMonth = date.getMonth() + 1;
+    const curDate = date.getDate();
+    that.setData({
+      selectedDate: `${curYear}-${curMonth}-${curDate}`
+    });
     initDatepicker({
       disablePastDay: true, // 是否禁选过去日期
-      // showInput: false, // 默认为 true
+      showInput: false, // 默认为 true
       // placeholder: '请选择日期', // input 输入框
       // type: 'normal', // [normal 普通单选模式(默认), timearea 时间段选择模式(待开发), multiSelect 多选模式(待完善)]
       /**
@@ -89,8 +112,10 @@ const conf = {
        * @param {object} event 日期点击事件对象
        */
       onTapDay(currentSelect, event) {
-        console.log(currentSelect);
-        console.log(event);
+        that.setData({
+          selectedDate: `${currentSelect.year}-${currentSelect.month}-${currentSelect.day}`
+        });
+        close();
       },
     });
   },

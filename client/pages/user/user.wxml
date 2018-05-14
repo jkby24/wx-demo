@@ -15,23 +15,23 @@
     <view class="zan-cell">
       <view class="zan-cell__bd zan-font-14 zan-c-gray-darker" wx:if="{{!bind}}">手机号：暂未绑定</view>
       <view class="zan-cell__bd zan-font-14 zan-c-gray-darker" wx:if="{{bind}}">手机号：{{member.mobile}}</view>
-      <button class="zan-btn zan-btn--mini zan-btn--primary zan-btn--plain"  bindtap="bind" wx:if="{{!bind}}">立即绑定</button>
+      <button class="zan-btn zan-btn--mini zan-btn--primary zan-btn--plain"  bindtap="bind" wx:if="{{!bind && logged}}">立即绑定</button>
     </view>
   </view>
   <view class="zan-panel">
     <view class="zan-cell zan-cell--access">
       <view class="zan-cell__bd zan-font-14 zan-c-gray-darker" wx:if="{{!isMember}}">会员状态：非会员</view>
       <view class="zan-cell__bd zan-font-14 zan-c-gray-darker" wx:if="{{isMember}}">会员状态：会员</view>
-      <button class="zan-btn zan-btn--mini zan-btn--primary zan-btn--plain"  bindtap="buy" wx:if="{{!isMember}}">立即购卡</button>
+      <button class="zan-btn zan-btn--mini zan-btn--primary zan-btn--plain"  bindtap="buy" wx:if="{{!isMember&&logged}}">立即购卡</button>
     </view>
   </view>
-  <view class="zan-panel"  wx:if="{{isMember}}">
+  <view class="zan-panel"  wx:if="{{isMember && logged}}">
     <view class="zan-cell zan-cell--access" bindtap="order">
       <view class="zan-cell__bd zan-font-14 zan-c-gray-darker">购卡记录</view>
       <view class="zan-cell__ft"></view>
     </view>
   </view>
-  <view class="zan-panel"  wx:if="{{isAdmin}}">
+  <view class="zan-panel"  wx:if="{{isAdmin && logged}}">
     <view class="zan-cell zan-cell--access" bindtap="goToAdminPage">
       <view class="zan-cell__bd zan-font-14 zan-c-gray-darker">管理界面</view>
       <view class="zan-cell__ft"></view>

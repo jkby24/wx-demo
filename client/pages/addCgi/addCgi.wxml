@@ -2,28 +2,21 @@
 <import src="../../template/datepicker/index.wxml"/>
 <view class="container">
    <view class="doc-title zan-hairline--bottom">暂未开放，敬请期待...</view>
-  <!--index.wxml-->
-<!-- <view class="container-fluid">
-    
-    <view class="demo5">
-        <calendar        
-        cell-size="30" 
-        next="{{true}}" prev="{{true}}" show-more-days="{{true}}"
-        weeks-type="cn"
-        calendar-style="demo5-calendar" 
-        header-style="demo5-header" 
-        board-style="demo5-board" 
-        days-color="{{demo5_days_style}}"
-         binddayClick="dayClick" 
-        />
+  <view class="zan-panel" >
+    <view class="zan-cell zan-cell--access" bindtap="openDatePicker">
+      <view class="zan-cell__bd zan-font-14 zan-c-gray-darker">日期：{{selectedDate}}</view>
+      <view class="zan-cell__ft"></view>
     </view>
-    
-</view> -->
-<view bindtap='test'>12{{datepicker.selectedValue}}</view>
-
-<view class="datepicker-box">
-	<template is="datepicker" data="{{...datepicker}}" />
-</view>
+  </view>
+  <zan-select
+  items="{{ items }}"
+  checkedValue="{{ checkedValue }}"
+  activeColor="{{ activeColor }}"
+  bind:change="handleSelectChange"
+/>
+  <view class="datepicker-box">
+    <template is="datepicker" data="{{...datepicker}}" />
+  </view>
 
 
 </view>
