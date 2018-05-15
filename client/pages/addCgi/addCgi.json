@@ -1,6 +1,3 @@
 {
-    "navigationBarTitleText": "预约",
-    "usingComponents": {
-      "zan-select": "../../libs/zanui-weapp-dev/dist/select/index"
-    }
+    "navigationBarTitleText": "预约"
 }
