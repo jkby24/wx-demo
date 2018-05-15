@@ -78,8 +78,10 @@ const conf = {
     checkedValue: '选项一',
     activeColor: '#ff4443'
   }, 
-  handleSelectChange({ detail }) {
-    console.log(detail);
+  handleZanSelectChange({ componentId, value }) {
+    this.setData({
+      [`checked.${componentId}`]: value
+    });
   },
   openDatePicker:function(){
     open(this.data.selectedDate);
@@ -126,4 +128,4 @@ const conf = {
     jumpToToday();
   }
 };
-Page(conf);
+Page(Object.assign({},Zan.Select,conf));

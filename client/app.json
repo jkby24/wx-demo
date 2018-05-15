@@ -19,7 +19,7 @@
       {
         "selectedIconPath": "images/3-s.png",
         "iconPath": "images/3.png",
-        "pagePath": "pages/addCgi/addCgi",
+        "pagePath": "pages/ma/ma",
         "text": "预约"
       },
       {
@@ -32,7 +32,7 @@
   },
   "pages":[
     "pages/index/index",
-    "pages/addCgi/addCgi",
+    "pages/ma/ma",
     "pages/shop/shop",
     "pages/user/user",
     "pages/user/bind/bind",

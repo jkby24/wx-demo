@@ -1,0 +1,25 @@
+<!--index.wxml-->
+<import src="../../template/datepicker/index.wxml" />
+<import src="../../libs/zanui-weapp-dev/dist/select/index.wxml" />
+<view class="container">
+  <view class="doc-title zan-hairline--bottom">暂未开放，敬请期待...</view>
+  <view class="zan-panel">
+    <view class="zan-cell zan-cell--access" bindtap="openDatePicker">
+      <view class="zan-cell__bd zan-font-14 zan-c-gray-darker">日期：{{selectedDate}}</view>
+      <view class="zan-cell__ft"></view>
+    </view>
+  </view>
+
+  
+  <view class="datepicker-box">
+    <template is="datepicker" data="{{...datepicker}}" />
+  </view>
+  <view class="zan-panel-title">时间段</view>
+  <view class="zan-panel">
+    <view>
+      <template is="zan-select" data="{{ items, checkedValue: checked.color, activeColor, componentId: 'color' }}"></template>
+    </view>
+  </view>
+
+
+</view>
