@@ -31,7 +31,7 @@ var util = require('../../utils/util.js')
 //    */
 //   onLoad: function (options) {
 //     const days_count = new Date(this.data.year, this.data.month, 0).getDate();
-    
+
 
 //     let demo5_days_style = new Array;
 //     for (let i = 1; i <= days_count; i++) {
@@ -55,36 +55,70 @@ var util = require('../../utils/util.js')
 //       demo5_days_style
 //     });
 
-    
+
 //   },
 // })
 
-import initDatepicker, { close,open,getSelectedDay, jumpToToday } from '../../template/datepicker/index';
+import initDatepicker, { close, open, getSelectedDay, jumpToToday } from '../../template/datepicker/index';
 const Zan = require('../../libs/zanui-weapp-dev/dist/index');
 const conf = {
-  data:{
-    selectedDate:'',
+  data: {
+    selectedDate: '',
+    tab: {
+      list: [{
+        id: '0',
+        title: '预约'
+      }, {
+        id: '1',
+        title: '已预约'
+      }],
+      selectedId: '0'
+    },
+
     items: [
       {
-        value: '1',
-        // 选项文案
-        name: '选项一',
+        value: '6:00~8:00',
+        name: '6:00~8:00',
       },
       {
-        value: '2',
-        name: '选项二',
+        value: '8:00~12:00',
+        name: '8:00~12:00',
       },
+      {
+        value: '12:00~14:00',
+        name: '12:00~14:00',
+      }
     ],
-    checkedValue: '选项一',
     activeColor: '#ff4443'
-  }, 
+  },
   handleZanSelectChange({ componentId, value }) {
     this.setData({
       [`checked.${componentId}`]: value
     });
   },
-  openDatePicker:function(){
+  handleZanTabChange(e) {
+    var componentId = e.componentId;
+    var selectedId = e.selectedId;
+
+    this.setData({
+      [`tab.selectedId`]: selectedId
+    });
+  },
+  openDatePicker: function () {
     open(this.data.selectedDate);
+  },
+  commit: function () {
+
+    if (!this.data.checked || !this.data.checked.qt) {
+      this.showZanToast("请选择时间段！");
+      return;
+    }
+    let date = this.data.selectedDate,
+      qt = this.data.checked.qt;
+    let qts = qt.split("~");
+    var beginTs = (new Date(`${date} ${qts[0]}:00`)).getTime(),
+      endTs = (new Date(`${date} ${qts[0]}:00`)).getTime();
+    console.log(this.data)
   },
   onShow: function () {
     let that = this;
@@ -128,4 +162,4 @@ const conf = {
     jumpToToday();
   }
 };
-Page(Object.assign({},Zan.Select,conf));
+Page(Object.assign({}, Zan.Select, Zan.Tab, Zan.Toast, conf));

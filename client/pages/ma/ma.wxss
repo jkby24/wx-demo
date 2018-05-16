@@ -6,4 +6,12 @@ page {
     flex-direction: column;
     justify-content: flex-start;
 }
+.container-user{
+  padding:0;
+}
+
+.container-panel{
+  margin-top:0;
+}
+
 

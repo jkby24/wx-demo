@@ -22,7 +22,10 @@ const CONF = {
 
     // 是否使用腾讯云代理登录小程序
     useQcloudLogin: true,
-
+    //时间段预约最大人数
+    maxQtMa:500,
+    //可预约的次数
+    maxMa: 3,
     /**
      * MySQL 配置，用来存储 session 和用户信息
      * 若使用了腾讯云微信小程序解决方案
