@@ -53,7 +53,8 @@ router.get('/admin/memberDetail',validationMiddleware, controllers.admin.memberD
 
 
 router.post('/ma/doMa',validationMiddleware, controllers.ma.doMa)//预约
-router.get('/ma/getQtMaInfo',validationMiddleware, controllers.ma.getQtMaInfo)//查询预约
+router.get('/ma/getQtMaInfo',validationMiddleware, controllers.ma.getQtMaInfo)//查询时间段的预约
+router.get('/ma/getMaList',validationMiddleware, controllers.ma.getMaList)//查询预约
 
 
 module.exports = router

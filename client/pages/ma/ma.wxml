@@ -6,34 +6,55 @@
 <view class="container container-user">
   <!-- <view class="doc-title zan-hairline--bottom">暂未开放，敬请期待...</view> -->
   <view>
-    <template
-      is="zan-tab"
-      data="{{ ...tab, componentId: 'tab' }}"></template>
+    <template is="zan-tab" data="{{ ...tab, componentId: 'tab' }}"></template>
   </view>
-  <view class="zan-panel container-panel"  wx:if="{{tab.selectedId == tab.list[0].id}}">
-  <view class="zan-panel">
-    <view class="zan-cell zan-cell--access" bindtap="openDatePicker">
-      <view class="zan-cell__bd zan-font-14 zan-c-gray-darker">请选择日期：{{selectedDate}}</view>
-      <view class="zan-cell__ft"></view>
+  <view class="zan-panel container-panel" wx:if="{{tab.selectedId == tab.list[0].id}}">
+    <view class="zan-panel">
+      <view class="zan-cell zan-cell--access" bindtap="openDatePicker">
+        <view class="zan-cell__bd zan-font-14 zan-c-gray-darker">请选择日期：{{selectedDate}}</view>
+        <view class="zan-cell__ft"></view>
+      </view>
+    </view>
+
+
+    <view class="datepicker-box">
+      <template is="datepicker" data="{{...datepicker}}" />
+    </view>
+    <view class="zan-panel-title">请选择时间段</view>
+    <view class="zan-panel">
+      <view>
+        <template is="zan-select" data="{{ items, checkedValue: checked.qt, activeColor, componentId: 'qt' }}"></template>
+      </view>
+    </view>
+    <view class="zan-btns">
+      <button class="zan-btn zan-btn--primary" bindtap="commit">提交</button>
     </view>
   </view>
 
-  
-  <view class="datepicker-box">
-    <template is="datepicker" data="{{...datepicker}}" />
-  </view>
-  <view class="zan-panel-title">请选择时间段</view>
-  <view class="zan-panel">
-    <view>
-      <template is="zan-select" data="{{ items, checkedValue: checked.qt, activeColor, componentId: 'qt' }}"></template>
+  <view class="zan-panel container-panel" wx:if="{{tab.selectedId == tab.list[1].id}}">
+    <view class="table ">
+      <view class="tr bg-w zan-font-14">
+        <view class="th" width="50">时间段</view>
+        <view class="th" width="50">操作</view>
+      </view>
+      <block wx:for="{{members}}" data-item="{{member}}" wx:key="{{openid}}" class=" zan-font-12">
+        <view class="tr" wx:if="{{index % 2 == 0}}">
+          <view class="td">{{item.mobile}}</view>
+          <view class="td">
+            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">取消预约</button>
+          </view>
+        </view>
+        <view class="tr  bg-g" wx:else>
+          <view class="td">{{item.mobile}}</view>
+          <view class="td">
+            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">取消预约</button>
+          </view>
+        </view>
+      </block>
     </view>
   </view>
-  <view class="zan-btns">
-    <button
-      class="zan-btn zan-btn--primary"
-      bindtap="commit">提交</button>
+  <view class="zan-panel container-panel" wx:if="{{tab.selectedId == tab.list[2].id}}">
+    2
   </view>
-</view>
-
 </view>
 <template is="zan-toast" data="{{ zanToast }}"></template>

@@ -4,7 +4,8 @@ const {
 var config = require('../config'); //配置文件 appid 等信息
 const moment = require('moment');
 const uuid = require('node-uuid')
-function isAdminJudge(openId){
+
+function isAdminJudge(openId) {
   return config.openIds.indexOf(openId) != -1;
 }
 
@@ -32,7 +33,7 @@ async function doMa(ctx, next) {
       end_ts: moment(endTs).format("YY-MM-DD hh:mm:ss"),
       open_id: openId,
     })
-    if (count3[0]['count(`id`)']>0) {
+    if (count3[0]['count(`id`)'] > 0) {
       ctx.state.data = {
         status: 1,
         errMsg: `您已预约该时段！请勿重复操作！`
@@ -41,11 +42,11 @@ async function doMa(ctx, next) {
     }
 
     //查找已预约的数量。
-    let nextDayTs = moment(moment().format("YYMMDD"),"YYMMDD").add(1, 'd').format("YY-MM-DD hh:mm:ss");
+    let nextDayTs = moment(moment().format("YYMMDD"), "YYMMDD").add(1, 'd').format("YY-MM-DD hh:mm:ss");
     let count2 = await mysql('ma').count('id').where({
       open_id: openId,
       status: 0
-    }).andWhere(function() {
+    }).andWhere(function () {
       this.where('begin_ts', '>', nextDayTs)
     })
     if (count2[0]['count(`id`)'] >= config.maxMa) {
@@ -62,24 +63,24 @@ async function doMa(ctx, next) {
       begin_ts: moment(beginTs).format("YY-MM-DD hh:mm:ss"),
       end_ts: moment(endTs).format("YY-MM-DD hh:mm:ss")
     });
-    if (count[0]['count(`id`)'] >= config.maxQtMa){
+    if (count[0]['count(`id`)'] >= config.maxQtMa) {
       ctx.state.data = {
         status: 1,
         errMsg: '该时段已约满！'
       }
       return;
     }
-    
-    
+
+
 
     // //记录预约信息
     let id = uuid.v1()
     let maObj = {
-      id:id,
+      id: id,
       open_id: openId,
       begin_ts: moment(beginTs).format("YY-MM-DD hh:mm:ss"),
       end_ts: moment(endTs).format("YY-MM-DD hh:mm:ss"),
-      status:0
+      status: 0
     }
     await mysql("ma").insert(maObj);
 
@@ -91,7 +92,44 @@ async function doMa(ctx, next) {
     ctx.state.code = -1;
   }
 }
+/**
+ * 获取用户预约列表
+ */
+async function getMaList(ctx, next) {
+  if (ctx.state.$wxInfo.loginState === 1) {
+    let openId = ctx.state.$wxInfo.userinfo.openId;
+    const {
+      isHistory
+    } = ctx.query;
+    let mas;
+    if (isHistory == 'true') {
+      mas = await mysql('ma').select('*').where({
+        open_id: openId
+      })
+    } else {
+      let currentTs = moment().format("YY-MM-DD hh:mm:ss");
+      mas = await mysql('ma').select('*').where({
+        open_id: openId,
+        status: 0,
+      }).andWhere(function () {
+        this.where('begin_ts', '>', currentTs)
+      })
 
+    }
+    if (!mas) {
+      ctx.state.data = {
+        status: 1
+      }
+      return;
+    }
+    ctx.state.data = {
+      status: 0,
+      mas: mas
+    }
+  } else {
+    ctx.state.code = -1;
+  }
+}
 /**
  * 获取指定某一天所有时间段的预约信息
  */
@@ -105,12 +143,12 @@ async function getQtMaInfo(ctx, next) {
       endTs: endTs
     });
 
-    
+
 
     //返回
     ctx.state.data = {
       status: 0,
-      data:{
+      data: {
 
       }
     }
@@ -120,6 +158,7 @@ async function getQtMaInfo(ctx, next) {
 }
 
 module.exports = {
+  getMaList,
   doMa,
   getQtMaInfo
 }

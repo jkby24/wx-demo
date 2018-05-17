@@ -20,9 +20,13 @@ const conf = {
       }, {
         id: '1',
         title: '已预约'
+      }, {
+        id: '2',
+        title: '历史预约'
       }],
       selectedId: '0'
     },
+    ma2:[],
 
     items: [{
         value: '6:00~8:00',
@@ -33,8 +37,20 @@ const conf = {
         name: '8:00~12:00',
       },
       {
-        value: '12:00~14:00',
-        name: '12:00~14:00',
+        value: '14:00~16:00',
+        name: '14:00~16:00',
+      },
+      {
+        value: '16:00~18:00',
+        name: '16:00~18:00',
+      },
+      {
+        value: '18:00~20:00',
+        name: '18:00~20:00',
+      },
+      {
+        value: '20:00~22:00',
+        name: '20:00~22:00',
       }
     ],
     activeColor: '#ff4443'
@@ -54,6 +70,43 @@ const conf = {
     this.setData({
       [`tab.selectedId`]: selectedId
     });
+    switch(selectedId){
+      case '0':
+        break;
+      case '1':
+        this.getMaFeature();
+        break;
+      case '2':
+        break;
+    }
+  },
+  getMaFeature:function(){
+    let that = this;
+    debugger;
+    //获取会员信息
+    qcloud.request({
+      url: `${config.service.host}/weapp/ma/getMaList`,
+      login: true,
+      // data:{
+      //   key:key?key:''
+      // },
+      success(result) {
+        switch (result.data.data.status) {
+          case 0:
+            let datenew Date(result.data.data.mas[0].begin_ts)
+            const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const hour = date.getHours()
+            that.setData({
+              ma2: result.data.data.mas
+            });
+        }
+      },
+      fail(error) {
+        console.log('查询预约列表失败', error.message);
+      }
+    })
   },
   openDatePicker: function () {
     open(this.data.selectedDate);
