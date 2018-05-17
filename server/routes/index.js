@@ -50,4 +50,11 @@ router.get('/member/member',validationMiddleware, controllers.member.member)//�
 router.get('/admin/isAdmin',validationMiddleware, controllers.admin.isAdmin)//是否会员
 router.get('/admin/memberList',validationMiddleware, controllers.admin.memberList)//会员列表
 router.get('/admin/memberDetail',validationMiddleware, controllers.admin.memberDetail)//会员详情
+
+
+router.post('/ma/doMa',validationMiddleware, controllers.ma.doMa)//预约
+router.get('/ma/getQtMaInfo',validationMiddleware, controllers.ma.getQtMaInfo)//查询预约
+
+
 module.exports = router
+

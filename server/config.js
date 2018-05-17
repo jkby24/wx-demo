@@ -23,7 +23,7 @@ const CONF = {
     // 是否使用腾讯云代理登录小程序
     useQcloudLogin: true,
     //时间段预约最大人数
-    maxQtMa:500,
+    maxQtMa:4,
     //可预约的次数
     maxMa: 3,
     /**

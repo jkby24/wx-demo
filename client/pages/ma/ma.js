@@ -2,64 +2,13 @@
 var qcloud = require('../../vendor/wafer2-client-sdk/index')
 var config = require('../../config')
 var util = require('../../utils/util.js')
-// pages/index.js
-// const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
-
-// Page({
-
-//   /**
-//    * 页面的初始数据
-//    */
-//   data: {
-//     year: new Date().getFullYear(),      // 年份
-//     month: new Date().getMonth() + 1,    // 月份
-//     day: new Date().getDate(),
-//     str: MONTHS[new Date().getMonth()],  // 月份字符串
-
-//     demo5_days_style: [],
-//   },
-//   dayClick: function (event) {
-//     console.log(event.detail);
-//     this.data.demo5_days_style.push({ month: 'current', day: event.detail.day, color: 'white', background: '#84e7d0' });
-
-//     this.setData({
-//       demo5_days_style: this.data.demo5_days_style
-//     });
-//   },
-//   /**
-//    * 生命周期函数--监听页面加载
-//    */
-//   onLoad: function (options) {
-//     const days_count = new Date(this.data.year, this.data.month, 0).getDate();
-
-
-//     let demo5_days_style = new Array;
-//     for (let i = 1; i <= days_count; i++) {
-//       const date = new Date(this.data.year, this.data.month - 1, i);
-//       if (date.getDay() == 0) {
-//         demo5_days_style.push({
-//           month: 'current', day: i, color: '#f488cd'
-//         });
-//       } else {
-//         demo5_days_style.push({
-//           month: 'current', day: i, color: '#a18ada'
-//         });
-//       }
-//     }
-//     demo5_days_style.push({ month: 'current', day: 12, color: 'white', background: '#b49eeb' });
-//     demo5_days_style.push({ month: 'current', day: 17, color: 'white', background: '#f5a8f0' });
-//     demo5_days_style.push({ month: 'current', day: 20, color: 'white', background: '#aad4f5' });
-//     demo5_days_style.push({ month: 'current', day: 25, color: 'white', background: '#84e7d0' });
-
-//     this.setData({
-//       demo5_days_style
-//     });
-
-
-//   },
-// })
-
-import initDatepicker, { close, open, getSelectedDay, jumpToToday } from '../../template/datepicker/index';
+var globalConfig = require('../../config')
+import initDatepicker, {
+  close,
+  open,
+  getSelectedDay,
+  jumpToToday
+} from '../../template/datepicker/index';
 const Zan = require('../../libs/zanui-weapp-dev/dist/index');
 const conf = {
   data: {
@@ -75,8 +24,7 @@ const conf = {
       selectedId: '0'
     },
 
-    items: [
-      {
+    items: [{
         value: '6:00~8:00',
         name: '6:00~8:00',
       },
@@ -91,7 +39,10 @@ const conf = {
     ],
     activeColor: '#ff4443'
   },
-  handleZanSelectChange({ componentId, value }) {
+  handleZanSelectChange({
+    componentId,
+    value
+  }) {
     this.setData({
       [`checked.${componentId}`]: value
     });
@@ -117,7 +68,42 @@ const conf = {
       qt = this.data.checked.qt;
     let qts = qt.split("~");
     var beginTs = (new Date(`${date} ${qts[0]}:00`)).getTime(),
-      endTs = (new Date(`${date} ${qts[0]}:00`)).getTime();
+      endTs = (new Date(`${date} ${qts[1]}:00`)).getTime();
+    var that = this;
+    util.showBusy('提交中')
+    qcloud.request({
+      url: `${globalConfig.service.host}/weapp/ma/doMa`,
+      login: true,
+      method: 'POST',
+      data: {
+        beginTs: beginTs,
+        endTs: endTs
+      },
+      success(result) {
+        wx.hideToast();
+        switch (result.data.data.status) {
+          case 0:
+            that.showZanToast({
+              title: '预约成功！',
+              icon: 'success'
+            });
+            break;
+          default:
+            that.showZanToast({
+              title: result.data.data.errMsg,
+              icon: 'fail'
+            });
+        }
+      },
+      fail(error) {
+        wx.hideToast();
+        that.showZanToast({
+          title: '预约失败，请重试!',
+          icon: 'fail'
+        });
+        console.log('绑定失败', error.message);
+      }
+    })
     console.log(this.data)
   },
   onShow: function () {
@@ -125,7 +111,7 @@ const conf = {
     const date = new Date();
     const curYear = date.getFullYear();
     const curMonth = date.getMonth() + 1;
-    const curDate = date.getDate();
+    const curDate = date.getDate() + 1;
     that.setData({
       selectedDate: `${curYear}-${curMonth}-${curDate}`
     });

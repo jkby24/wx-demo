@@ -2,6 +2,8 @@ const {
   mysql
 } = require('../qcloud')
 var config = require('../config'); //配置文件 appid 等信息
+const moment = require('moment');
+const uuid = require('node-uuid')
 function isAdminJudge(openId){
   return config.openIds.indexOf(openId) != -1;
 }
@@ -24,27 +26,29 @@ async function doMa(ctx, next) {
     let beginTs = body.beginTs;
     let endTs = body.endTs;
 
-    //查找对应时间段已预约的人数。
-    let count = await mysql('ma').select('*').where({
+    let count3 = await mysql('ma').count('id').where({
       status: 0,
-      beginTs: beginTs,
-      endTs: endTs
-    });
-    if (count >= config.maxQtMa){
+      begin_ts: moment(beginTs).format("YY-MM-DD hh:mm:ss"),
+      end_ts: moment(endTs).format("YY-MM-DD hh:mm:ss"),
+      open_id: openId,
+    })
+    if (count3[0]['count(`id`)']>0) {
       ctx.state.data = {
         status: 1,
-        errMsg: '已约满！'
+        errMsg: `您已预约该时段！请勿重复操作！`
       }
       return;
     }
 
     //查找已预约的数量。
-    let count2 = await mysql('ma').select('*').where({
-      status: 0,
-      beginTs: beginTs,
-      endTs: endTs
-    });
-    if (count2 >= config.maxMa) {
+    let nextDayTs = moment(moment().format("YYMMDD"),"YYMMDD").add(1, 'd').format("YY-MM-DD hh:mm:ss");
+    let count2 = await mysql('ma').count('id').where({
+      open_id: openId,
+      status: 0
+    }).andWhere(function() {
+      this.where('begin_ts', '>', nextDayTs)
+    })
+    if (count2[0]['count(`id`)'] >= config.maxMa) {
       ctx.state.data = {
         status: 1,
         errMsg: `单个用户最多只能预约${config.maxMa}次`
@@ -52,14 +56,30 @@ async function doMa(ctx, next) {
       return;
     }
 
-    //记录预约信息
+    //查找对应时间段已预约的人数。
+    let count = await mysql('ma').count('id').where({
+      status: 0,
+      begin_ts: moment(beginTs).format("YY-MM-DD hh:mm:ss"),
+      end_ts: moment(endTs).format("YY-MM-DD hh:mm:ss")
+    });
+    if (count[0]['count(`id`)'] >= config.maxQtMa){
+      ctx.state.data = {
+        status: 1,
+        errMsg: '该时段已约满！'
+      }
+      return;
+    }
+    
+    
+
+    // //记录预约信息
     let id = uuid.v1()
     let maObj = {
       id:id,
-      openid: openId,
-      beginTs: mobile,
-      endTs: endTs,
-      ts: moment().format("YYYY-MM-DD HH:mm:ss")
+      open_id: openId,
+      begin_ts: moment(beginTs).format("YY-MM-DD hh:mm:ss"),
+      end_ts: moment(endTs).format("YY-MM-DD hh:mm:ss"),
+      status:0
     }
     await mysql("ma").insert(maObj);
 
@@ -100,6 +120,6 @@ async function getQtMaInfo(ctx, next) {
 }
 
 module.exports = {
-  getCode,
-  bind
+  doMa,
+  getQtMaInfo
 }
