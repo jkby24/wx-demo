@@ -12,6 +12,7 @@ import initDatepicker, {
 const Zan = require('../../libs/zanui-weapp-dev/dist/index');
 const conf = {
   data: {
+    today:'',
     selectedDate: '',
     tab: {
       list: [{
@@ -28,7 +29,9 @@ const conf = {
     },
     ma2:[],
     ma3:[],
-    items: [{
+    ma4: [],
+    items:[],
+    itemsOrgin: [{
         value: '6:00~8:00',
         name: '6:00~8:00',
       },
@@ -153,8 +156,51 @@ const conf = {
       }
     })
   },
+  getQtInfo(){
+    var that = this;
+    qcloud.request({
+      url: `${config.service.host}/weapp/ma/getQtMaInfo`,
+      login: true,
+      data: {
+        day: this.data.selectedDate
+      },
+      success(result) {
+        switch (result.data.data.status) {
+          case 0:
+            let date = that.data.selectedDate;
+            1526594400
+            1526655939.212
+            let items = [];
+            for (let i = 0; i < that.data.itemsOrgin.length;i++){
+              let item = that.data.itemsOrgin[i],
+                qt = item.value;
+              let qts = qt.split("~");
+              var beginTs = (new Date(`${date} ${qts[0]}:00`)).getTime() / 1000,
+                endTs = (new Date(`${date} ${qts[1]}:00`)).getTime() / 1000;
+              let key = `${beginTs}-${endTs}`;
+              let count = result.data.data.qtInfo[key] || 0;
+              var currentTs = (new Date()).getTime()/1000;
+              if (currentTs <= beginTs){
+                items.push({
+                  value: item.value,
+                  name: item.name,
+                  desc: `(${count}/${result.data.data.total})`
+                })
+              }
+            }
+            that.setData({
+              items
+            });
+        }
+      },
+      fail(error) {
+        console.log('当日预约信息失败', error.message);
+      }
+    })
+    
+  },
   openDatePicker: function () {
-    open(this.data.selectedDate);
+    open(this.data.selectedDate,this.data.today);
   },
   commit: function () {
 
@@ -211,8 +257,10 @@ const conf = {
     const curMonth = date.getMonth() + 1;
     const curDate = date.getDate();
     that.setData({
-      selectedDate: `${curYear}-${curMonth}-${curDate}`
+      selectedDate: `${curYear}-${curMonth}-${curDate}`,
+      today : `${curYear}-${curMonth}-${curDate}`
     });
+    this.getQtInfo();
     initDatepicker({
       disablePastDay: true, // 是否禁选过去日期
       showInput: false, // 默认为 true
@@ -235,6 +283,7 @@ const conf = {
         that.setData({
           selectedDate: `${currentSelect.year}-${currentSelect.month}-${currentSelect.day}`
         });
+        that.getQtInfo();
         close();
       },
     });

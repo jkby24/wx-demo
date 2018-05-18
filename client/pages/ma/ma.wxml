@@ -32,7 +32,8 @@
   </view>
 
   <view class="zan-panel container-panel" wx:if="{{tab.selectedId == tab.list[1].id}}">
-    <view class="table ">
+     <view class="doc-title" wx:if="{{!ma2 || ma2.length==0}}">暂无记录...</view> 
+    <view class="table " wx:if="{{ma2 && ma2.length>0}}">
       <view class="tr bg-w zan-font-14">
         <view class="th" width="50">日期</view>
         <view class="th" width="50">时间段</view>
@@ -57,26 +58,23 @@
     </view>
   </view>
   <view class="zan-panel container-panel" wx:if="{{tab.selectedId == tab.list[2].id}}">
-    <view class="table ">
+    <view class="doc-title" wx:if="{{!ma3 || ma3.length==0}}">暂无记录...</view> 
+    <view class="table " wx:if="{{ma3 && ma3.length>0}}">
       <view class="tr bg-w zan-font-14">
         <view class="th" width="50">日期</view>
         <view class="th" width="50">时间段</view>
-        <view class="th" width="50">操作</view>
+        <view class="th" width="50">状态</view>
       </view>
       <block wx:for="{{ma3}}" data-item="{{ma}}" wx:key="{{id}}" class=" zan-font-12">
         <view class="tr" wx:if="{{index % 2 == 0}}">
           <view class="td">{{item.displayDate}}</view>
           <view class="td">{{item.displayQt}}</view>
-          <view class="td">
-            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">取消预约</button>
-          </view>
+          <view class="td">{{item.status=="1"?"已取消":"正常"}}</view>
         </view>
         <view class="tr  bg-g" wx:else>
           <view class="td">{{item.displayDate}}</view>
           <view class="td">{{item.displayQt}}</view>
-          <view class="td">
-            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">取消预约</button>
-          </view>
+          <view class="td">{{item.status=="1"?"已取消":"正常"}}</view>
         </view>
       </block>
     </view>

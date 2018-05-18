@@ -199,24 +199,24 @@ const conf = {
 	 * @param {number} curMonth
 	 * @param {number} curDate
 	 */
-  init(curYear = 2018, curMonth = 1, curDate = 1) {
+  init(curYear = 2018, curMonth = 1, curDate = 1, today) {
     const self = _getCurrentPage();
     const weeksCh = [ '日', '一', '二', '三', '四', '五', '六' ];
     self.setData({
       'datepicker.weeksCh': weeksCh,
       'datepicker.showDatePicker': true,
     });
-    conf.jumpToDay.call(self, curYear, curMonth, curDate);
+    conf.jumpToDay.call(self, curYear, curMonth, curDate, today);
   },
   /**
 	 * 点击输入框调起日历选择器
 	 * @param {object} e  事件对象
 	 */
-  showDatepicker(value) {
+  showDatepicker(value,today) {
     // const value = e.detail.value;
     if (value && typeof value === 'string') {
       const tmp = value.split('-');
-      conf.init(+tmp[ 0 ], +tmp[ 1 ], +tmp[ 2 ]);
+      conf.init(+tmp[0], +tmp[1], +tmp[2], today);
     } else {
       conf.init();
     }
@@ -373,12 +373,13 @@ const conf = {
   /**
 	 * 跳转指定的日期
 	 */
-  jumpToDay(curYear, curMonth, curDate) {
+  jumpToDay(curYear, curMonth, curDate, today) {
     const timestamp = new Date(`${curYear}-${curMonth}-${curDate}`).getTime();
+    const todayTimestamp = new Date(today).getTime();
     this.setData({
       'datepicker.curYear': curYear,
       'datepicker.curMonth': curMonth,
-      'datepicker.todayTimestamp': timestamp,
+      'datepicker.todayTimestamp': todayTimestamp,
     });
     conf.calculateEmptyGrids.call(this, curYear, curMonth);
     conf.calculateDays.call(this, curYear, curMonth, curDate);
@@ -429,9 +430,9 @@ export const getSelectedDay = () => {
 /**
  * 打开日历
  */
-export const open = (value) => {
+export const open = (value, today) => {
   const self = _getCurrentPage();
-  conf.showDatepicker.call(self, value);
+  conf.showDatepicker.call(self, value,today);
 };
 /**
  * 关闭日历

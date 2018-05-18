@@ -158,7 +158,7 @@ async function getMaList(ctx, next) {
     if (isHistory == 'true') {
       mas = await mysql('ma').select('*').where({
         open_id: openId
-      }).orderBy('begin_ts', 'asc')
+      }).orderBy('begin_ts', 'desc')
     } else {
       let currentTs = moment().format("YY-MM-DD HH:mm:ss");
       mas = await mysql('ma').select('*').where({
@@ -188,22 +188,34 @@ async function getMaList(ctx, next) {
  */
 async function getQtMaInfo(ctx, next) {
   if (ctx.state.$wxInfo.loginState === 1) {
-    let day = body.day;
-
-    let count = await mysql('ma').select('*').where({
-      status: 0,
-      beginTs: beginTs,
-      endTs: endTs
-    });
-
+    const {
+      day
+    } = ctx.query;
+    let startTs = moment(day).format("YY-MM-DD HH:mm:ss"),
+      endTs = moment(day).add(1,"d").format("YY-MM-DD HH:mm:ss");
+    let mas = await mysql('ma').select('*').where({
+      status: 0
+    }).whereBetween('begin_ts', [startTs, endTs]).orderBy('begin_ts', 'asc')
+    let infos = {};
+    for(let i=0;i<mas.length;i++){
+      let ma = mas[i];
+      let begints = moment(ma.begin_ts).unix(),
+          endts = moment(ma.end_ts).unix();
+      let key = `${begints}-${endts}`;
+      let info = infos[key];
+      if(info){
+        infos[key] += 1;
+      }else{
+        infos[key] = 1;
+      }
+    }
 
 
     //返回
     ctx.state.data = {
       status: 0,
-      data: {
-
-      }
+      total: config.maxQtMa,
+      qtInfo: infos
     }
   } else {
     ctx.state.code = -1;
