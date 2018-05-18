@@ -21,16 +21,26 @@ function isAdminJudge(openId) {
  */
 async function doMa(ctx, next) {
   if (ctx.state.$wxInfo.loginState === 1) {
-
+    
     const body = ctx.request.body;
     let openId = ctx.state.$wxInfo.userinfo.openId;
     let beginTs = body.beginTs;
     let endTs = body.endTs;
 
+    let beginMoment = moment(beginTs),currentTime = moment();
+    if(beginMoment.isBefore(currentTime)){
+      ctx.state.data = {
+        status: 1,
+        errMsg: `预约的时段已过期！请重新选择！`
+      }
+      return;
+    }
+
+
     let count3 = await mysql('ma').count('id').where({
       status: 0,
-      begin_ts: moment(beginTs).format("YY-MM-DD hh:mm:ss"),
-      end_ts: moment(endTs).format("YY-MM-DD hh:mm:ss"),
+      begin_ts: moment(beginTs).format("YY-MM-DD HH:mm:ss"),
+      end_ts: moment(endTs).format("YY-MM-DD HH:mm:ss"),
       open_id: openId,
     })
     if (count3[0]['count(`id`)'] > 0) {
@@ -41,13 +51,12 @@ async function doMa(ctx, next) {
       return;
     }
 
-    //查找已预约的数量。
-    let nextDayTs = moment(moment().format("YYMMDD"), "YYMMDD").add(1, 'd').format("YY-MM-DD hh:mm:ss");
+    //查找已预约的数量
     let count2 = await mysql('ma').count('id').where({
       open_id: openId,
       status: 0
     }).andWhere(function () {
-      this.where('begin_ts', '>', nextDayTs)
+      this.where('begin_ts', '>', currentTime.format("YY-MM-DD HH:mm:ss"))
     })
     if (count2[0]['count(`id`)'] >= config.maxMa) {
       ctx.state.data = {
@@ -60,8 +69,8 @@ async function doMa(ctx, next) {
     //查找对应时间段已预约的人数。
     let count = await mysql('ma').count('id').where({
       status: 0,
-      begin_ts: moment(beginTs).format("YY-MM-DD hh:mm:ss"),
-      end_ts: moment(endTs).format("YY-MM-DD hh:mm:ss")
+      begin_ts: moment(beginTs).format("YY-MM-DD HH:mm:ss"),
+      end_ts: moment(endTs).format("YY-MM-DD HH:mm:ss")
     });
     if (count[0]['count(`id`)'] >= config.maxQtMa) {
       ctx.state.data = {
@@ -78,11 +87,55 @@ async function doMa(ctx, next) {
     let maObj = {
       id: id,
       open_id: openId,
-      begin_ts: moment(beginTs).format("YY-MM-DD hh:mm:ss"),
-      end_ts: moment(endTs).format("YY-MM-DD hh:mm:ss"),
+      begin_ts: moment(beginTs).format("YY-MM-DD HH:mm:ss"),
+      end_ts: moment(endTs).format("YY-MM-DD HH:mm:ss"),
       status: 0
     }
     await mysql("ma").insert(maObj);
+
+    //返回
+    ctx.state.data = {
+      status: 0
+    }
+  } else {
+    ctx.state.code = -1;
+  }
+}
+/**
+ * 预约取消
+ * beginTs:
+ * endTs
+ */
+async function maCancel(ctx, next) {
+  if (ctx.state.$wxInfo.loginState === 1) {
+    
+    let openId = ctx.state.$wxInfo.userinfo.openId;
+    const {
+      id
+    } = ctx.query;
+
+    let currentTime = moment();
+    let ma = await mysql('ma').select('*').where({
+      status: 0,
+      id: id,
+      open_id: openId,
+    }).andWhere(function () {
+      this.where('begin_ts', '>', currentTime.format("YY-MM-DD HH:mm:ss"))
+    }).first()
+    if (!ma) {
+      ctx.state.data = {
+        status: 1,
+        errMsg: `预约不存在或已过期！`
+      }
+      return;
+    }
+
+    let updateData = {
+      status: 1
+    }
+    await mysql("ma").update(updateData).where({
+      id:id
+    })
 
     //返回
     ctx.state.data = {
@@ -105,15 +158,15 @@ async function getMaList(ctx, next) {
     if (isHistory == 'true') {
       mas = await mysql('ma').select('*').where({
         open_id: openId
-      })
+      }).orderBy('begin_ts', 'asc')
     } else {
-      let currentTs = moment().format("YY-MM-DD hh:mm:ss");
+      let currentTs = moment().format("YY-MM-DD HH:mm:ss");
       mas = await mysql('ma').select('*').where({
         open_id: openId,
         status: 0,
       }).andWhere(function () {
         this.where('begin_ts', '>', currentTs)
-      })
+      }).orderBy('begin_ts', 'asc')
 
     }
     if (!mas) {
@@ -160,5 +213,6 @@ async function getQtMaInfo(ctx, next) {
 module.exports = {
   getMaList,
   doMa,
+  maCancel,
   getQtMaInfo
 }

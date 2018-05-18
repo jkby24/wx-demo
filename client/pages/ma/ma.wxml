@@ -34,27 +34,52 @@
   <view class="zan-panel container-panel" wx:if="{{tab.selectedId == tab.list[1].id}}">
     <view class="table ">
       <view class="tr bg-w zan-font-14">
+        <view class="th" width="50">日期</view>
         <view class="th" width="50">时间段</view>
         <view class="th" width="50">操作</view>
       </view>
-      <block wx:for="{{members}}" data-item="{{member}}" wx:key="{{openid}}" class=" zan-font-12">
+      <block wx:for="{{ma2}}" data-item="{{item}}" wx:key="{{id}}" class=" zan-font-12">
         <view class="tr" wx:if="{{index % 2 == 0}}">
-          <view class="td">{{item.mobile}}</view>
+          <view class="td">{{item.displayDate}}</view>
+          <view class="td">{{item.displayQt}}</view>
           <view class="td">
-            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">取消预约</button>
+            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary"  bindtap="maCancel" data-item="{{item}}">取消预约</button>
           </view>
         </view>
         <view class="tr  bg-g" wx:else>
-          <view class="td">{{item.mobile}}</view>
+          <view class="td">{{item.displayDate}}</view>
+          <view class="td">{{item.displayQt}}</view>
           <view class="td">
-            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">取消预约</button>
+            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary" bindtap="maCancel" data-item="{{item}}">取消预约</button>
           </view>
         </view>
       </block>
     </view>
   </view>
   <view class="zan-panel container-panel" wx:if="{{tab.selectedId == tab.list[2].id}}">
-    2
+    <view class="table ">
+      <view class="tr bg-w zan-font-14">
+        <view class="th" width="50">日期</view>
+        <view class="th" width="50">时间段</view>
+        <view class="th" width="50">操作</view>
+      </view>
+      <block wx:for="{{ma3}}" data-item="{{ma}}" wx:key="{{id}}" class=" zan-font-12">
+        <view class="tr" wx:if="{{index % 2 == 0}}">
+          <view class="td">{{item.displayDate}}</view>
+          <view class="td">{{item.displayQt}}</view>
+          <view class="td">
+            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">取消预约</button>
+          </view>
+        </view>
+        <view class="tr  bg-g" wx:else>
+          <view class="td">{{item.displayDate}}</view>
+          <view class="td">{{item.displayQt}}</view>
+          <view class="td">
+            <button class="zan-btn  zan-btn zan-btn--small zan-btn--primary">取消预约</button>
+          </view>
+        </view>
+      </block>
+    </view>
   </view>
 </view>
 <template is="zan-toast" data="{{ zanToast }}"></template>

@@ -27,7 +27,7 @@ const conf = {
       selectedId: '0'
     },
     ma2:[],
-
+    ma3:[],
     items: [{
         value: '6:00~8:00',
         name: '6:00~8:00',
@@ -55,6 +55,39 @@ const conf = {
     ],
     activeColor: '#ff4443'
   },
+  //取消预约
+  maCancel(event){
+    let item = event.currentTarget.dataset.item;
+    util.showBusy('提交中')
+    let that = this;
+    qcloud.request({
+      url: `${config.service.host}/weapp/ma/maCancel`,
+      login: true,
+      data:{
+        id:item.id
+      },
+      success(result) {
+        wx.hideToast();
+        switch (result.data.data.status) {
+          case 0:
+            that.showZanToast({
+              title: '取消预约成功！',
+              icon: 'success'
+            });
+            break;
+          default:
+            that.showZanToast({
+              title: result.data.data.errMsg,
+              icon: 'fail'
+            });
+        }
+      },
+      fail(error) {
+        wx.hideToast();
+        console.log('取消预约失败！', error.message);
+      }
+    })
+  },
   handleZanSelectChange({
     componentId,
     value
@@ -77,30 +110,42 @@ const conf = {
         this.getMaFeature();
         break;
       case '2':
+        this.getMaFeature(true);
         break;
     }
   },
-  getMaFeature:function(){
+  getMaFeature:function(isHistory){
     let that = this;
-    debugger;
-    //获取会员信息
+    //获取预约列表信息
     qcloud.request({
       url: `${config.service.host}/weapp/ma/getMaList`,
       login: true,
-      // data:{
-      //   key:key?key:''
-      // },
+      data:{
+        isHistory:isHistory?isHistory:''
+      },
       success(result) {
         switch (result.data.data.status) {
           case 0:
-            let datenew Date(result.data.data.mas[0].begin_ts)
-            const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const hour = date.getHours()
-            that.setData({
-              ma2: result.data.data.mas
-            });
+            if(result.data.data.mas.length>0){
+              for(let i=0;i<result.data.data.mas.length;i++){
+                let maTemp =  result.data.data.mas[i];
+                let beginTs = new Date(maTemp.begin_ts),
+                    endTs = new Date(maTemp.end_ts);
+                let displayDate = `${beginTs.getFullYear()}-${beginTs.getMonth() + 1}-${beginTs.getDate()}`,
+                displayQt = `${beginTs.getHours()}:00~${endTs.getHours()}:00`;
+                maTemp['displayDate'] = displayDate;
+                maTemp['displayQt'] = displayQt;
+              }
+              if(isHistory){
+                that.setData({
+                  ma3: result.data.data.mas
+                });
+              }else{
+                that.setData({
+                  ma2: result.data.data.mas
+                });
+              }
+            }
         }
       },
       fail(error) {
@@ -164,7 +209,7 @@ const conf = {
     const date = new Date();
     const curYear = date.getFullYear();
     const curMonth = date.getMonth() + 1;
-    const curDate = date.getDate() + 1;
+    const curDate = date.getDate();
     that.setData({
       selectedDate: `${curYear}-${curMonth}-${curDate}`
     });
