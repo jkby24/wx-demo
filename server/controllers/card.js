@@ -5,6 +5,35 @@ const uuid = require('node-uuid')
 const moment = require('moment');
 const wxpay = require('../tools/pay.js');
 const config = require('../config');
+async function isMember(openid){
+  //查询订单中已付款的记录
+  let orders = await mysql('order').select('*').where({
+    status: 1,
+    openid: openid
+  });
+  if (!orders || orders.length == 0) {
+    return { isMember :false};
+  }
+  let validOrders = [],
+    currentTs = moment(),
+    isMember = false;
+  for (let i = 0; i < orders.length; i++) {
+    let order = orders[i];
+    if (!order.endts) {
+      continue;
+    }
+    //判断卡是否有效
+    let endts = moment(order.endts);
+    if (currentTs.isBefore(endts)) { //还处于生效期
+      validOrders.push(order);
+      isMember = true;
+    }
+  }
+  return {
+    isMember: isMember,
+    orders: orders
+  }
+}
 /**
  * 列表
  */
@@ -71,7 +100,7 @@ async function buy(ctx, next) {
       price: total_fee,
       card_type: data.type,
       status: 0,
-      ts: moment().format("YYYY-MM-DD HH:mm:ss")
+      ts: moment().format("YYYY/MM/DD HH:mm:ss")
     }
     await mysql("order").insert(order); //增加订单
 
@@ -110,37 +139,12 @@ async function history(ctx, next) {
  */
 async function member(ctx, next) {
   if (ctx.state.$wxInfo.loginState === 1) {
-    let openid = ctx.state.$wxInfo.userinfo.openId;
-    //查询订单中已付款的记录
-    let orders = await mysql('order').select('*').where({
-      status: 1,
-      openid: openid
-    });
-    let data;
-    if (!orders || orders.length == 0) {
-      data = {}
-      return;
-    }
-    let validOrders = [],
-      currentTs = moment(),
-      isMember = false;
-    for (let i = 0; i < orders.length; i++) {
-      let order = orders[i];
-      if (!order.endts) {
-        continue;
-      }
-      //判断卡是否有效
-      let endts = moment(order.endts);
-      if (currentTs.isBefore(endts)) { //还处于生效期
-        validOrders.push(order);
-        isMember = true;
-      }
-    }
+    let openId = ctx.state.$wxInfo.userinfo.openId;
+    let memberInfo = await isMember(openId);
     //返回
     ctx.state.data = {
       status: 0,
-      isMember: isMember,
-      orders: orders
+      memberInfo: memberInfo
     }
   } else {
     ctx.state.code = -1;
@@ -193,7 +197,7 @@ async function notify(ctx, next) {
   }
   let data = {
     status: 1,
-    buyts: moment().format("YYYY-MM-DD HH:mm:ss")
+    buyts: moment().format("YYYY/MM/DD HH:mm:ss")
   }
   let orders = await mysql('order').select('*').where({
     status: 1,
@@ -214,25 +218,25 @@ async function notify(ctx, next) {
       }
     }
   }
-  let begints = lastEndTs.format("YYYY-MM-DD HH:mm:ss");
+  let begints = lastEndTs.format("YYYY/MM/DD HH:mm:ss");
   let endts;
   switch (order.card_type) {
     case "1": //年卡
-      endts = lastEndTs.add(365, 'd').format("YYYY-MM-DD HH:mm:ss");
+      endts = lastEndTs.add(365, 'd').format("YYYY/MM/DD HH:mm:ss");
       break;
     case "2": //季卡
-      endts = lastEndTs.add(90, 'd').format("YYYY-MM-DD HH:mm:ss");
+      endts = lastEndTs.add(90, 'd').format("YYYY/MM/DD HH:mm:ss");
       break;
     case "3": //月卡
-      endts = lastEndTs.add(30, 'd').format("YYYY-MM-DD HH:mm:ss");
+      endts = lastEndTs.add(30, 'd').format("YYYY/MM/DD HH:mm:ss");
       break;
     default: //单次卡
-      endts = lastEndTs.add(1, 'd').format("YYYY-MM-DD HH:mm:ss");
+      endts = lastEndTs.add(1, 'd').format("YYYY/MM/DD HH:mm:ss");
       break;
   }
   let updateData = {
     status: 1,
-    buyts: moment().format("YYYY-MM-DD HH:mm:ss"),
+    buyts: moment().format("YYYY/MM/DD HH:mm:ss"),
     begints: begints,
     endts: endts
   }
@@ -262,5 +266,6 @@ module.exports = {
   buy,
   member,
   notify,
-  history
+  history,
+  isMember
 }

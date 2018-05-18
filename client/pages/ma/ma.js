@@ -36,8 +36,16 @@ const conf = {
         name: '6:00~8:00',
       },
       {
-        value: '8:00~12:00',
-        name: '8:00~12:00',
+        value: '8:00~10:00',
+        name: '8:00~10:00',
+      },
+      {
+        value: '10:00~12:00',
+        name: '10:00~12:00',
+      },
+      {
+        value: '12:00~14:00',
+        name: '12:00~14:00',
       },
       {
         value: '14:00~16:00',
@@ -135,7 +143,7 @@ const conf = {
                 let maTemp =  result.data.data.mas[i];
                 let beginTs = new Date(maTemp.begin_ts),
                     endTs = new Date(maTemp.end_ts);
-                let displayDate = `${beginTs.getFullYear()}-${beginTs.getMonth() + 1}-${beginTs.getDate()}`,
+                let displayDate = `${beginTs.getFullYear()}/${beginTs.getMonth() + 1}/${beginTs.getDate()}`,
                 displayQt = `${beginTs.getHours()}:00~${endTs.getHours()}:00`;
                 maTemp['displayDate'] = displayDate;
                 maTemp['displayQt'] = displayQt;
@@ -179,7 +187,7 @@ const conf = {
       success(result) {
         switch (result.data.data.status) {
           case 0:
-            console.log('返回');
+            
             let date = that.data.selectedDate;
             let items = [];
             for (let i = 0; i < that.data.itemsOrgin.length;i++){
@@ -199,7 +207,7 @@ const conf = {
                 })
               }
             }
-            console.log('获取预约信息',item.length);
+            console.log('获取预约信息',items.length);
             that.setData({
               items
             });
@@ -269,8 +277,8 @@ const conf = {
     const curMonth = date.getMonth() + 1;
     const curDate = date.getDate();
     that.setData({
-      selectedDate: `${curYear}-${curMonth}-${curDate}`,
-      today : `${curYear}-${curMonth}-${curDate}`
+      selectedDate: `${curYear}/${curMonth}/${curDate}`,
+      today : `${curYear}/${curMonth}/${curDate}`
     });
     this.getQtInfo();
     initDatepicker({
@@ -293,7 +301,7 @@ const conf = {
        */
       onTapDay(currentSelect, event) {
         that.setData({
-          selectedDate: `${currentSelect.year}-${currentSelect.month}-${currentSelect.day}`
+          selectedDate: `${currentSelect.year}/${currentSelect.month}/${currentSelect.day}`
         });
         that.getQtInfo();
         close();

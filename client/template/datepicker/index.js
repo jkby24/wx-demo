@@ -132,7 +132,7 @@ const conf = {
 	 */
   calculateNextMonthGrids(year, month) {
     const thisMonthDays = conf.getThisMonthDays(year, month);
-    const lastDayWeek = new Date(`${year}-${month}-${thisMonthDays}`).getDay();
+    const lastDayWeek = new Date(`${year}/${month}/${thisMonthDays}`).getDay();
     let lastEmptyGrids = [];
     if (+lastDayWeek !== 6) {
       const len = 7 - (lastDayWeek + 1);
@@ -175,7 +175,7 @@ const conf = {
       });
     }
     days.map(item => {
-      const timestamp = new Date(`${item.year}-${item.month}-${item.day}`).getTime();
+      const timestamp = new Date(`${item.year}/${item.month}/${item.day}`).getTime();
       if (this.config.disablePastDay && (timestamp - todayTimestamp < 0)) {
         item.disable = true;
       }
@@ -215,7 +215,7 @@ const conf = {
   showDatepicker(value,today) {
     // const value = e.detail.value;
     if (value && typeof value === 'string') {
-      const tmp = value.split('-');
+      const tmp = value.split('/');
       conf.init(+tmp[0], +tmp[1], +tmp[2], today);
     } else {
       conf.init();
@@ -230,7 +230,7 @@ const conf = {
     this.inputTimer = setTimeout(() => {
       console.log(e);
       const v = e.detail.value;
-      const _v = (v && v.split('-')) || [];
+      const _v = (v && v.split('/')) || [];
       const RegExpYear = /^\d{4}$/;
       const RegExpMonth = /^(([0]?[1-9])|([1][0-2]))$/;
       const RegExpDay = /^(([0]?[1-9])|([1-2][0-9])|(3[0-1]))$/;
@@ -303,7 +303,7 @@ const conf = {
     const { afterTapDay, onTapDay } = config;
     const { curYear, curMonth, days } = this.data.datepicker;
     const key = `datepicker.days[${idx}].choosed`;
-    const selectedValue = `${curYear}-${curMonth}-${days[ idx ].day}`;
+    const selectedValue = `${curYear}/${curMonth}/${days[ idx ].day}`;
     if (this.config.type === 'timearea') {
       if (onTapDay && typeof onTapDay === 'function') {
         config.onTapDay(this.data.datepicker.days[ idx ], e);
@@ -367,14 +367,14 @@ const conf = {
     const curYear = date.getFullYear();
     const curMonth = date.getMonth() + 1;
     const curDate = date.getDate();
-    const timestamp = new Date(`${curYear}-${curMonth}-${curDate}`).getTime();
+    const timestamp = new Date(`${curYear}/${curMonth}/${curDate}`).getTime();
     conf.calculateDays.call(this, curYear, curMonth, curDate);
   },
   /**
 	 * 跳转指定的日期
 	 */
   jumpToDay(curYear, curMonth, curDate, today) {
-    const timestamp = new Date(`${curYear}-${curMonth}-${curDate}`).getTime();
+    const timestamp = new Date(`${curYear}/${curMonth}/${curDate}`).getTime();
     const todayTimestamp = new Date(today).getTime();
     this.setData({
       'datepicker.curYear': curYear,

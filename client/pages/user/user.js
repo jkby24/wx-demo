@@ -72,12 +72,16 @@ Page({
                     success(result) {
                         switch (result.data.data.status) {
                             case 0:
-                                let isMember = result.data.data.isMember;
+                            let memberInfo = result.data.data.memberInfo;
+                            if (memberInfo){
+                                let isMember = memberInfo.isMember;
                                 if (isMember) {
                                     that.setData({
                                         isMember: true
                                     });
                                 }
+
+                            }
                         }
                     },
                     fail(error) {

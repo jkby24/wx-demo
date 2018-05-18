@@ -4,7 +4,8 @@ const {
 var config = require('../config'); //配置文件 appid 等信息
 const moment = require('moment');
 const uuid = require('node-uuid')
-
+const fomatStr = "YY/MM/DD HH:mm:ss"
+var card = require('./card.js'); //
 function isAdminJudge(openId) {
   return config.openIds.indexOf(openId) != -1;
 }
@@ -24,6 +25,14 @@ async function doMa(ctx, next) {
     
     const body = ctx.request.body;
     let openId = ctx.state.$wxInfo.userinfo.openId;
+    let memberInfo = await card.isMember(openId);
+    if (!memberInfo.isMember){
+      ctx.state.data = {
+        status: 1,
+        errMsg: `您还未购买会员卡或已过期！无法进行预约！`
+      }
+      return;
+    }
     let beginTs = body.beginTs;
     let endTs = body.endTs;
 
@@ -39,8 +48,8 @@ async function doMa(ctx, next) {
 
     let count3 = await mysql('ma').count('id').where({
       status: 0,
-      begin_ts: moment(beginTs).format("YY-MM-DD HH:mm:ss"),
-      end_ts: moment(endTs).format("YY-MM-DD HH:mm:ss"),
+      begin_ts: moment(beginTs).format(fomatStr),
+      end_ts: moment(endTs).format(fomatStr),
       open_id: openId,
     })
     if (count3[0]['count(`id`)'] > 0) {
@@ -56,7 +65,7 @@ async function doMa(ctx, next) {
       open_id: openId,
       status: 0
     }).andWhere(function () {
-      this.where('begin_ts', '>', currentTime.format("YY-MM-DD HH:mm:ss"))
+      this.where('begin_ts', '>', currentTime.format(fomatStr))
     })
     if (count2[0]['count(`id`)'] >= config.maxMa) {
       ctx.state.data = {
@@ -69,8 +78,8 @@ async function doMa(ctx, next) {
     //查找对应时间段已预约的人数。
     let count = await mysql('ma').count('id').where({
       status: 0,
-      begin_ts: moment(beginTs).format("YY-MM-DD HH:mm:ss"),
-      end_ts: moment(endTs).format("YY-MM-DD HH:mm:ss")
+      begin_ts: moment(beginTs).format(fomatStr),
+      end_ts: moment(endTs).format(fomatStr)
     });
     if (count[0]['count(`id`)'] >= config.maxQtMa) {
       ctx.state.data = {
@@ -87,8 +96,8 @@ async function doMa(ctx, next) {
     let maObj = {
       id: id,
       open_id: openId,
-      begin_ts: moment(beginTs).format("YY-MM-DD HH:mm:ss"),
-      end_ts: moment(endTs).format("YY-MM-DD HH:mm:ss"),
+      begin_ts: moment(beginTs).format(fomatStr),
+      end_ts: moment(endTs).format(fomatStr),
       status: 0
     }
     await mysql("ma").insert(maObj);
@@ -120,7 +129,7 @@ async function maCancel(ctx, next) {
       id: id,
       open_id: openId,
     }).andWhere(function () {
-      this.where('begin_ts', '>', currentTime.format("YY-MM-DD HH:mm:ss"))
+      this.where('begin_ts', '>', currentTime.format(fomatStr))
     }).first()
     if (!ma) {
       ctx.state.data = {
@@ -160,7 +169,7 @@ async function getMaList(ctx, next) {
         open_id: openId
       }).orderBy('begin_ts', 'desc')
     } else {
-      let currentTs = moment().format("YY-MM-DD HH:mm:ss");
+      let currentTs = moment().format(fomatStr);
       mas = await mysql('ma').select('*').where({
         open_id: openId,
         status: 0,
@@ -191,8 +200,8 @@ async function getQtMaInfo(ctx, next) {
     const {
       day
     } = ctx.query;
-    let startTs = moment(day).format("YY-MM-DD HH:mm:ss"),
-      endTs = moment(day).add(1,"d").format("YY-MM-DD HH:mm:ss");
+    let startTs = moment(day).format(fomatStr),
+      endTs = moment(day).add(1,"d").format(fomatStr);
     let mas = await mysql('ma').select('*').where({
       status: 0
     }).whereBetween('begin_ts', [startTs, endTs]).orderBy('begin_ts', 'asc')

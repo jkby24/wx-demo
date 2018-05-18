@@ -48,7 +48,7 @@ async function bind(ctx, next) {
     let order = {
       openid: openId,
       mobile: mobile,
-      ts: moment().format("YYYY-MM-DD HH:mm:ss")
+      ts: moment().format("YYYY/MM/DD HH:mm:ss")
     }
     await mysql("user").insert(order); //增加会员信息
 
@@ -116,7 +116,7 @@ async function getCode(ctx, next) {
       mobile: mobile,
       code: code,
       type: 1,
-      ts: moment().format("YYYY-MM-DD HH:mm:ss")
+      ts: moment().format("YYYY/MM/DD HH:mm:ss")
     }
     await mysql("sms").insert(order); //增加订单
 
