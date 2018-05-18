@@ -27,7 +27,7 @@
       </view>
     </view>
     <view class="zan-btns">
-      <button class="zan-btn zan-btn--primary" bindtap="commit">提交</button>
+      <button class="zan-btn zan-btn--primary" bindtap="commit">预约</button>
     </view>
   </view>
 

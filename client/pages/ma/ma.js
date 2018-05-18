@@ -77,6 +77,7 @@ const conf = {
               title: '取消预约成功！',
               icon: 'success'
             });
+            that.getMaFeature();
             break;
           default:
             that.showZanToast({
@@ -148,6 +149,16 @@ const conf = {
                   ma2: result.data.data.mas
                 });
               }
+            }else{
+              if (isHistory) {
+                that.setData({
+                  ma3: []
+                });
+              } else {
+                that.setData({
+                  ma2: []
+                });
+              }
             }
         }
       },
@@ -157,6 +168,7 @@ const conf = {
     })
   },
   getQtInfo(){
+    
     var that = this;
     qcloud.request({
       url: `${config.service.host}/weapp/ma/getQtMaInfo`,
@@ -167,19 +179,18 @@ const conf = {
       success(result) {
         switch (result.data.data.status) {
           case 0:
+            console.log('返回');
             let date = that.data.selectedDate;
-            1526594400
-            1526655939.212
             let items = [];
             for (let i = 0; i < that.data.itemsOrgin.length;i++){
               let item = that.data.itemsOrgin[i],
                 qt = item.value;
               let qts = qt.split("~");
-              var beginTs = (new Date(`${date} ${qts[0]}:00`)).getTime() / 1000,
+              let beginTs = (new Date(`${date} ${qts[0]}:00`)).getTime() / 1000,
                 endTs = (new Date(`${date} ${qts[1]}:00`)).getTime() / 1000;
               let key = `${beginTs}-${endTs}`;
               let count = result.data.data.qtInfo[key] || 0;
-              var currentTs = (new Date()).getTime()/1000;
+              let currentTs = (new Date()).getTime()/1000;
               if (currentTs <= beginTs){
                 items.push({
                   value: item.value,
@@ -188,6 +199,7 @@ const conf = {
                 })
               }
             }
+            console.log('获取预约信息',item.length);
             that.setData({
               items
             });
