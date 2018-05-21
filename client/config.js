@@ -3,7 +3,8 @@
  */
 
 // 此处主机域名修改成腾讯云解决方案分配的域名
-var host = 'https://xqthxszo.qcloud.la';
+// var host = 'https://xqthxszo.qcloud.la';//开发环境
+var host = 'https://427751131.dmsclub.com.cn';//生产环境
 
 var config = {
 

@@ -6,7 +6,8 @@ const CONF = {
     appId: 'wxa30d31d1e77b9d5e',
     payKey: '192006340b4c09247ec02edce69f6a3d', 
     openIds: ['ocNp_4gokWUwkWL88-ej8Hfp-0x8'],
-    notify_url:"https://xqthxszo.qcloud.la/weapp/card/notify",
+    // notify_url:"https://xqthxszo.qcloud.la/weapp/card/notify",//开发环境
+    notify_url:"https://427751131.dmsclub.com.cn/weapp/card/notify",
     mch_id:"1503154531",
     ip:"111.143.57.127",
     // 短信应用SDK AppID
@@ -31,12 +32,21 @@ const CONF = {
      * 若使用了腾讯云微信小程序解决方案
      * 开发环境下，MySQL 的初始密码为您的微信小程序 appid
      */
+    // mysql: {
+    //     host: 'localhost',
+    //     port: 3306,
+    //     user: 'root',
+    //     db: 'cAuth',
+    //     pass: '1qaz2wsx',
+    //     char: 'utf8mb4'
+    // },
+    //生产环境
     mysql: {
         host: 'localhost',
         port: 3306,
         user: 'root',
         db: 'cAuth',
-        pass: '1qaz2wsx',
+        pass: '33tx8k6B',
         char: 'utf8mb4'
     },
 

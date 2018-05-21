@@ -14,7 +14,7 @@ Page({
     },
     onLoad: function () {},
     onShow: function () {
-      this.getUserInfo();  
+      this.getUserInfo();
     },
     bind: function () {
         wx.navigateTo({
@@ -116,6 +116,7 @@ Page({
     // 用户登录
     login: function () {
       var that = this;
+      debugger;
       util.login((success) => {
         if (success) {
           that.getUserInfo();

@@ -1,4 +1,5 @@
 var qcloud = require('../vendor/wafer2-client-sdk/index')
+var config = require('../config')
 const formatTime = date => {
     const year = date.getFullYear()
     const month = date.getMonth() + 1
