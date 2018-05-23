@@ -1,7 +1,7 @@
 const CONF = {
     port: '5757',
     rootPathname: '',
-
+    deadTime:'2019/4/30 00:00:00',
     // 微信小程序 App ID
     appId: 'wxa30d31d1e77b9d5e',
     payKey: '192006340b4c09247ec02edce69f6a3d', 
@@ -40,7 +40,7 @@ const CONF = {
     //     pass: '1qaz2wsx',
     //     char: 'utf8mb4'
     // },
-    //生产环境
+    // //生产环境
     mysql: {
         host: 'localhost',
         port: 3306,

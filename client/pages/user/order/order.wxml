@@ -8,20 +8,20 @@
       <view class="zan-card__detail">
         <view class="zan-card__detail-row">
           <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='1'}}">年卡</view>
-          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='2'}}">季卡</view>
-          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='3'}}">月卡</view>
-          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='4'}}">单次卡</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='5'}}">亲子卡</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='6'}}">儿童培训卡</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='7'}}">成人培训卡</view>
         </view>
 
         <view class="zan-card__detail-row zan-c-gray-darker">
-          <view class="zan-card__left-col ts-lebel zan-font-10">订单号：{{item.id}}</view>
-          <view class="zan-card__left-col ts-lebel zan-font-10">够买时间：{{item.buyts}}</view>
-          <view class="zan-card__left-col ts-lebel zan-font-10">
+          <view class="zan-card__left-col ts-lebel zan-font-12">订单号：{{item.id}}</view>
+          <view class="zan-card__left-col ts-lebel zan-font-12">够买时间：{{item.buyts}}</view>
+          <!-- <view class="zan-card__left-col ts-lebel zan-font-10">
             生效日期：{{item.begints}}
           </view>
           <view class="zan-card__left-col ts-lebel zan-font-10">
             失效日期：{{item.endts}}
-          </view>
+          </view> -->
         </view>
       </view>
     </view>

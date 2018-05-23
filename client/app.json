@@ -17,12 +17,6 @@
         "text": "充值"
       },
       {
-        "selectedIconPath": "images/3-s.png",
-        "iconPath": "images/3.png",
-        "pagePath": "pages/ma/ma",
-        "text": "预约"
-      },
-      {
         "selectedIconPath": "images/4-s.png",
         "iconPath": "images/4.png",
         "pagePath": "pages/user/user",
@@ -32,7 +26,6 @@
   },
   "pages":[
     "pages/index/index",
-    "pages/ma/ma",
     "pages/shop/shop",
     "pages/user/user",
     "pages/user/bind/bind",

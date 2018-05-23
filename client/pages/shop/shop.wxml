@@ -9,7 +9,7 @@
     <view class="zan-card" bindtap="buy" data-item="{{item}}" wx:key="id" wx:for="{{card}}">
       <view class="zan-card__thumb">
         <image class="zan-card__img"
-          src="./images/{{item.id}}.png"
+          src="./images/{{item.type}}.png"
           mode="aspectFit"
         ></image>
       </view>
@@ -41,7 +41,7 @@
 
   <view class="zan-panel-title">年卡使用说明</view>
     <view class="zan-panel">
-       <textarea disabled value="{{content}}" class="ta zan-font-14 zan-c-gray-darker"  maxlength="500"/>
+       <textarea disabled value="{{content}}" class="ta zan-font-14 zan-c-gray-darker"  maxlength="700"/>
     </view>
     <view class="zan-panel">
       <view class="zan-btns">

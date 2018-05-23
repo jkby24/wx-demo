@@ -116,7 +116,6 @@ Page({
     // 用户登录
     login: function () {
       var that = this;
-      debugger;
       util.login((success) => {
         if (success) {
           that.getUserInfo();
