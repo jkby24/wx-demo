@@ -39,9 +39,9 @@
   <view class="zan-panel shop-panel" wx:if="{{page == 1}}">
     <view class="doc-title zan-hairline--bottom">购买须知</view>
 
-  <view class="zan-panel-title">年卡使用说明</view>
+  <view class="zan-panel-title">{{currentItem.title}}使用说明</view>
     <view class="zan-panel">
-       <textarea disabled value="{{content}}" class="ta zan-font-14 zan-c-gray-darker"  maxlength="700"/>
+       <textarea disabled value="{{content[currentItem.type]}}" class="ta zan-font-14 zan-c-gray-darker"  maxlength="700"/>
     </view>
     <view class="zan-panel">
       <view class="zan-btns">
