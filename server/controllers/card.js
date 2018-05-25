@@ -83,7 +83,7 @@ async function buy(ctx, next) {
     var body = data.title;
     var mch_id = config.mch_id; //商户ID
     var bookingNo = `${ts}${code}`; //订单号
-    var total_fee = 1; //data.price;       
+    var total_fee = data.price;       
     let ip = "";
     let payInfo = await wxpay.order(attach, body, mch_id, openid, bookingNo, total_fee);
 

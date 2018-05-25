@@ -9,7 +9,8 @@ Page(Object.assign({}, Zan.Dialog, Zan.Toast, {
     card: [],
     page: 0,
     currentItem: {},
-    content: {1:`
+    content: {
+      1: `
     1、普通单人年卡原价1588元，现价399元；（65周岁以下）
     2、此卡有效期至2019年4月30日。
     3、游泳时请主动出示此卡，听从工作人员劝导，遵守泳池管理规定，每天限用一次，每次两个小时，限本人使用。
@@ -18,7 +19,7 @@ Page(Object.assign({}, Zan.Dialog, Zan.Toast, {
     6、本卡最终解释权归福建省康健体育文化发展有限公司所有。
     客服热线：0591-83775953
     `,
-    5:`
+      5: `
     1、家庭亲子卡原价2999元，现价598元（一大65周岁以下一小为14周岁以下）
     2、此卡有效期至2019年4月30日。
     3、游泳时请主动出示此卡，听从工作人员劝导，遵守泳池管理规定，每天限用一次，每次两个小时，限本人使用。
@@ -33,12 +34,13 @@ Page(Object.assign({}, Zan.Dialog, Zan.Toast, {
     3、本卡最终解释权归福建省康健体育文化发展有限公司所有。
     4、客服热线：0591-83775953
     `,
-    7: `
+      7: `
     1、此卡已含十次门票，限本人使用，不可转借或转让，遗失可补卡（补卡工本费20元），报名后未开卡可全额退款；开课2节内按实际上课次数计算，并扣除15%违约金后可退回余款；开课后2节后不予退款；学员开课后应在20天内完成培训。儿童培训卡原价900元10节课每次课程1.5小时，任选一种泳姿。
     2、包学包会，毕业标准为独立游25米包含深水区，10次课时未学会的，门票自理免费培训至毕业为止。
     3、本卡最终解释权归福建省康健体育文化发展有限公司所有。
     4、客服热线：0591-83775953
-    `}
+    `
+    }
   },
   onLoad: function () {
     var that = this
@@ -63,11 +65,48 @@ Page(Object.assign({}, Zan.Dialog, Zan.Toast, {
     wx.getStorage({
       key: 'user',
       success: function (res) {
-        let item = event.currentTarget.dataset.item;
-        that.setData({
-          page: 1,
-          currentItem: item,
-        })
+        //获取手机信息
+        qcloud.request({
+          url: `${config.service.host}/weapp/member/member`,
+          login: true,
+          success(result) {
+            switch (result.data.data.status) {
+              case 0:
+                let item = event.currentTarget.dataset.item;
+                that.setData({
+                  page: 1,
+                  currentItem: item,
+                })
+                break;
+              default:
+                that.showZanDialog({
+                  title: '提示',
+                  content: `您还未绑定手机，无法进行操作，是否前往绑定？`,
+                  buttons: [{
+                    text: '确定',
+                    color: '#3CC51F',
+                    type: 'yes'
+                  }, {
+                    text: '取消',
+                    type: 'cancel'
+                  }]
+                }).then(({
+                  type
+                }) => {
+                  if (type == "yes") {
+                    wx.switchTab({
+                      url: '../user/user'
+                    })
+                  }
+                });
+                break;
+            }
+          },
+          fail(error) {
+            console.log('读取会员信息失败', error.message);
+          }
+        });
+
       },
       fail: function (res) {
         that.showZanDialog({
@@ -82,8 +121,8 @@ Page(Object.assign({}, Zan.Dialog, Zan.Toast, {
             type: 'cancel'
           }]
         }).then(({
-      type
-    }) => {
+          type
+        }) => {
           if (type == "yes") {
             wx.switchTab({
               url: '../user/user'
