@@ -21,6 +21,10 @@ Page({
       success(result) {
         switch (result.data.data.status) {
           case 0:
+            for(let key in result.data.data.orders){
+              let order = result.data.data.orders[key];
+              order['buy_ts_display'] = util.formatTime(new Date(order.buyts))
+            }
             that.setData({
               orders: result.data.data.orders
             });

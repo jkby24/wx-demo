@@ -194,14 +194,11 @@ const conf = {
               let item = that.data.itemsOrgin[i],
                 qt = item.value;
               let qts = qt.split("~");
-              console.log('返回tt', (new Date(`${date} ${qts[0]}:00`)).getTime());
               let beginTs = (new Date(`${date} ${qts[0]}:00`)).getTime() / 1000,
                 endTs = (new Date(`${date} ${qts[1]}:00`)).getTime() / 1000;
               let key = `${beginTs}-${endTs}`;
               let count = result.data.data.qtInfo[key] || 0;
               let currentTs = (new Date()).getTime()/1000;
-              console.log('返回', that.data.selectedDate);
-              console.log('返回2', beginTs);
               if (currentTs <= beginTs){
                 items.push({
                   value: item.value,
@@ -210,7 +207,6 @@ const conf = {
                 })
               }
             }
-            console.log('获取预约信息',items.length);
             that.setData({
               items
             });
