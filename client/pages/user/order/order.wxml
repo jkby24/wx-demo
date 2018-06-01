@@ -9,8 +9,10 @@
         <view class="zan-card__detail-row">
           <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='1'}}">年卡</view>
           <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='5'}}">亲子卡</view>
-          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='6'}}">儿童培训卡</view>
-          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='7'}}">成人培训卡</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='6'}}">2人团购年卡</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='7'}}">单人培训卡</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='8'}}">5人团购培训</view>
+          <view class="zan-card__left-col zan-ellipsis--l2" wx:if="{{item.card_type=='9'}}">10人团购培训</view>
         </view>
 
         <view class="zan-card__detail-row zan-c-gray-darker">
